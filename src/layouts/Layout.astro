@@ -25,7 +25,7 @@ const { title, withSidebar = false, enableExitAnimations = false } = Astro.props
 		<title>{title}</title>
 	</head>
 	<body 
-        class:list={["bg-dark-bg text-primary font-code-mono antialiased", { "md:pl-20": withSidebar }]}
+        class:list={["bg-dark-bg text-primary font-code-mono antialiased", { "md:pl-32": withSidebar }]}
         data-exit-animations={enableExitAnimations.toString()}
     >
 		<slot />

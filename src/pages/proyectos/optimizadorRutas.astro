@@ -1,6 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import SideNavbar from '@components/SideNavbar.astro';
+import InfoCard from '@components/InfoCard.astro';
 
 const project = {
     title: "Optimizador Logístico",
@@ -79,22 +80,20 @@ const project = {
                         <span class="text-green-400">03.</span> Lógica de Enrutamiento
                     </h2>
                     <ul class="space-y-6 mt-6">
-                        <li class="bg-highlight p-6 rounded-xl border border-white/5 hover:border-green-500/30 transition-colors">
-                            <h3 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
-                                <i class="fas fa-route text-green-400"></i> Cálculo de Ruta Óptima
-                            </h3>
-                            <p class="text-secondary text-sm">
-                                El sistema no solo dibuja líneas. Al seleccionar un repartidor y un set de paquetes, el algoritmo consulta la API de OpenStreetMap para calcular la matriz de distancias y sugerir la ruta más corta (Shortest Path), optimizando tiempos de entrega y combustible.
-                            </p>
-                        </li>
-                        <li class="bg-highlight p-6 rounded-xl border border-white/5 hover:border-orange-500/30 transition-colors">
-                            <h3 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
-                                <i class="fas fa-fire text-orange-400"></i> Firebase Real-time Sync
-                            </h3>
-                            <p class="text-secondary text-sm">
-                                La persistencia de datos se delegó a <strong>Firebase</strong>. Esto permite que la gestión del CRUD (altas, bajas y edición de repartidores/paquetes) sea instantánea y esté sincronizada, permitiendo escalar a múltiples despachadores operando simultáneamente.
-                            </p>
-                        </li>
+                        <InfoCard 
+                            title="Cálculo de Ruta Óptima"
+                            description="El sistema no solo dibuja líneas. Al seleccionar un repartidor y un set de paquetes, el algoritmo consulta la API de OpenStreetMap para calcular la matriz de distancias y sugerir la ruta más corta (Shortest Path), optimizando tiempos de entrega y combustible."
+                            icon="fas fa-route"
+                            iconColorClass="text-green-400"
+                            hoverBorderColorClass="hover:border-green-500/30"
+                        />
+                        <InfoCard 
+                            title="Firebase Real-time Sync"
+                            description="La persistencia de datos se delegó a Firebase. Esto permite que la gestión del CRUD (altas, bajas y edición de repartidores/paquetes) sea instantánea y esté sincronizada, permitiendo escalar a múltiples despachadores operando simultáneamente."
+                            icon="fas fa-fire"
+                            iconColorClass="text-orange-400"
+                            hoverBorderColorClass="hover:border-orange-500/30"
+                        />
                     </ul>
                 </section>
 

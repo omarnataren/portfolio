@@ -1,6 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import SideNavbar from '@components/SideNavbar.astro';
+import InfoCard from '@components/InfoCard.astro';
 
 const project = {
     title: "Legado",
@@ -77,18 +78,20 @@ const project = {
                         <span class="text-red-400">03.</span> Arquitectura & Ejecución
                     </h2>
                     <ul class="space-y-6 mt-6">
-                        <li class="bg-highlight p-6 rounded-xl border border-white/5">
-                            <h3 class="text-white font-bold text-lg mb-2">Clean Architecture</h3>
-                            <p class="text-secondary text-sm">
-                                Implementé una separación estricta de capas (Domain, Data, Presentation) en Flutter. Esto permite que la lógica de negocio (como el matching de experiencias) sea independiente de la UI, facilitando pruebas unitarias y escalabilidad futura.
-                            </p>
-                        </li>
-                        <li class="bg-highlight p-6 rounded-xl border border-white/5">
-                            <h3 class="text-white font-bold text-lg mb-2">Real-time Connection</h3>
-                            <p class="text-secondary text-sm">
-                                Uso de <strong>Firestore Streams</strong> para el chat en tiempo real y actualizaciones de estado de reservas. Integración con Google Maps API para geolocalización precisa de experiencias ocultas que no aparecen en guías turísticas.
-                            </p>
-                        </li>
+                        <InfoCard 
+                            title="Clean Architecture"
+                            description="Implementé una separación estricta de capas (Domain, Data, Presentation) en Flutter. Esto permite que la lógica de negocio (como el matching de experiencias) sea independiente de la UI, facilitando pruebas unitarias y escalabilidad futura."
+                            icon="fas fa-layer-group"
+                            iconColorClass="text-red-400"
+                            hoverBorderColorClass="hover:border-red-500/30"
+                        />
+                        <InfoCard 
+                            title="Real-time Connection"
+                            description="Uso de Firestore Streams para el chat en tiempo real y actualizaciones de estado de reservas. Integración con Google Maps API para geolocalización precisa de experiencias ocultas que no aparecen en guías turísticas."
+                            icon="fas fa-bolt"
+                            iconColorClass="text-yellow-400"
+                            hoverBorderColorClass="hover:border-red-500/30"
+                        />
                     </ul>
                 </section>
 

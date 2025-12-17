@@ -1,6 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
 import SideNavbar from '@components/SideNavbar.astro';
+import InfoCard from '@components/InfoCard.astro';
 
 const project = {
     title: "Mi Tiendita POS",
@@ -85,22 +86,20 @@ const project = {
                         <span class="text-purple-400">03.</span> Simulación de Hardware
                     </h2>
                     <ul class="space-y-6 mt-6">
-                        <li class="bg-highlight p-6 rounded-xl border border-white/5 hover:border-purple-500/30 transition-colors">
-                            <h3 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
-                                <i class="fas fa-receipt text-purple-400"></i> Generación de Tickets
-                            </h3>
-                            <p class="text-secondary text-sm">
-                                El sistema completa el ciclo de venta generando un ticket digital formateado profesionalmente. La interfaz está optimizada para entrada rápida de datos, pensada para conectarse plug-and-play con <strong>escáneres de códigos de barras</strong> e <strong>impresoras térmicas</strong>.
-                            </p>
-                        </li>
-                        <li class="bg-highlight p-6 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors">
-                            <h3 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
-                                <i class="fas fa-database text-blue-400"></i> Integridad de Datos (PostgreSQL)
-                            </h3>
-                            <p class="text-secondary text-sm">
-                                Usando <strong>Supabase (PostgreSQL)</strong>, aseguré la integridad referencial de los datos. A diferencia de soluciones NoSQL rápidas, aquí cada transacción es ACID, garantizando que el inventario siempre cuadre con las ventas reportadas, vital para la contabilidad real.
-                            </p>
-                        </li>
+                        <InfoCard 
+                            title="Generación de Tickets"
+                            description="El sistema completa el ciclo de venta generando un ticket digital formateado profesionalmente. La interfaz está optimizada para entrada rápida de datos, pensada para conectarse plug-and-play con escáneres de códigos de barras e impresoras térmicas."
+                            icon="fas fa-receipt"
+                            iconColorClass="text-purple-400"
+                            hoverBorderColorClass="hover:border-purple-500/30"
+                        />
+                        <InfoCard 
+                            title="Integridad de Datos (PostgreSQL)"
+                            description="Usando Supabase (PostgreSQL), aseguré la integridad referencial de los datos. A diferencia de soluciones NoSQL rápidas, aquí cada transacción es ACID, garantizando que el inventario siempre cuadre con las ventas reportadas, vital para la contabilidad real."
+                            icon="fas fa-database"
+                            iconColorClass="text-blue-400"
+                            hoverBorderColorClass="hover:border-blue-500/30"
+                        />
                     </ul>
                 </section>
 

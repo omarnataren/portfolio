@@ -18,21 +18,18 @@
         y: undefined as number | undefined,
     }
 
-    window.addEventListener('mousemove', function(event) {
-        const rect = canvas.getBoundingClientRect();
-        const currentX = event.clientX - rect.left;
-        const currentY = event.clientY - rect.top;
-        
-        // Si es la primera vez que se mueve, solo guardamos posición y salimos
+    // Función unificada para manejar la entrada (Mouse o Touch)
+    function handleMovement(x: number, y: number) {
+        // Si es la primera vez que se mueve/toca, solo guardamos posición y salimos
         if (lastMouse.x === undefined || lastMouse.y === undefined) {
-            lastMouse.x = currentX;
-            lastMouse.y = currentY;
+            lastMouse.x = x;
+            lastMouse.y = y;
             return;
         }
 
         // Calculamos el vector de movimiento (Delta)
-        const dx = currentX - lastMouse.x;
-        const dy = currentY - lastMouse.y;
+        const dx = x - lastMouse.x;
+        const dy = y - lastMouse.y;
         
         // Calculamos la distancia recorrida
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -42,17 +39,45 @@
         if (distance > 5) {
             // Generamos 1 partícula por evento (suficiente para un rastro elegante)
             // Pasamos dx y dy para calcular la dirección contraria
-            particlesArray.push(new Particle(currentX, currentY, dx, dy));
+            particlesArray.push(new Particle(x, y, dx, dy));
             
             // Actualizamos la última posición conocida
-            lastMouse.x = currentX;
-            lastMouse.y = currentY;
+            lastMouse.x = x;
+            lastMouse.y = y;
         }
 
         // Limpieza preventiva
         if (particlesArray.length > maxParticles) {
             particlesArray.splice(0, particlesArray.length - maxParticles);
         }
+    }
+
+    // Eventos de MOUSE (PC)
+    window.addEventListener('mousemove', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        handleMovement(event.clientX - rect.left, event.clientY - rect.top);
+    });
+
+    // Eventos TÁCTILES (Móvil)
+    // touchstart: Reinicia la posición inicial para evitar "saltos" desde la última posición del mouse
+    window.addEventListener('touchstart', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = event.touches[0];
+        lastMouse.x = touch.clientX - rect.left;
+        lastMouse.y = touch.clientY - rect.top;
+    });
+
+    // touchmove: Genera partículas mientras arrastras el dedo
+    window.addEventListener('touchmove', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = event.touches[0];
+        handleMovement(touch.clientX - rect.left, touch.clientY - rect.top);
+    });
+
+    // touchend: Limpia la posición para que el próximo toque empiece fresco
+    window.addEventListener('touchend', function() {
+        lastMouse.x = undefined;
+        lastMouse.y = undefined;
     });
 
     class Particle {
