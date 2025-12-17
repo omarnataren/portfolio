@@ -1,8 +1,8 @@
 ---
 import AboutMe from '@components/AboutMe.astro';
 import Contacto from '@components/Contacto.astro';
-import Layout from '../layouts/Layout.astro';
-import Particles from '@components/Particles.astro';
+import Layout from '@layouts/Layout.astro';
+import Particles from '@components/Particles.astro'; 
 import SideNavbar from '@components/SideNavbar.astro';
 import Stack from '@components/Stack.astro';
 import Proyects from '@components/Proyects.astro';
@@ -13,28 +13,47 @@ import Proyects from '@components/Proyects.astro';
     <SideNavbar />
 
     <main class="max-w-5xl mx-auto px-6 pb-12">
+        
+        <!-- Renderizamos las partículas -->
         <Particles />
-        <section id="inicio" class=" relative min-h-screen flex flex-col justify-center items-start border-b border-black overflow-hidden">
-			
-			<div class="relative z-10">
-				<h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 animated-item">
-					OMAR NATAREN
-				</h1>
-				<h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest animated-item" style="transition-delay: 0.5s;">
-					// INGENIERO DE SOFTWARE - ESPECIALIZADO EN ARQUITECTURA DE SISTEMAS ESCALABLES Y DISEÑO UI/UX
-				</h3>
-				<div id="hero-buttons" class="flex gap-4 animated-item" style="transition-delay: 1s;">
-					<a href="#proyectos" name="proyectos" class="text-xl text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300">
-						[ EXPLORAR TRABAJO ]
-					</a>
-					<a href="https://github.com/omarnataren" aria-label="Go to Github" target="_blank" class="text-lg text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300">
-						<i class="fab fa-github"></i>
-					</a>
-					<a href="https://www.linkedin.com/in/omar-nataren-arredondo-189531370/" aria-label="Go to LinkedIn" target="_blank" class="text-lg text-white/80 border border-white/50 py-3 px-6 hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition duration-300">
-						<i class="fab fa-linkedin"></i>
-					</a>
-				</div>
-			</div>
+        
+        <section id="inicio" class="relative min-h-screen flex flex-col justify-center items-start border-b border-white/10 overflow-hidden">
+            
+            <div class="relative z-10">
+                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 animated-item">
+                    OMAR NATAREN
+                </h1>
+                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest animated-item" style="transition-delay: 0.5s;">
+                    // INGENIERO DE SOFTWARE - ESPECIALIZADO EN ARQUITECTURA DE SISTEMAS ESCALABLES Y DISEÑO UI/UX
+                </h3>
+                <div id="hero-buttons" class="flex gap-4 animated-item" style="transition-delay: 1s;">
+                    <a href="#proyectos" name="proyectos" class="text-xl text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300">
+                        [ EXPLORAR TRABAJO ]
+                    </a>
+                    <a href="https://github.com/omarnataren" aria-label="Go to Github" target="_blank" class="text-lg text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/omar-nataren-arredondo-189531370/" aria-label="Go to LinkedIn" target="_blank" class="text-lg text-white/80 border border-white/50 py-3 px-6 hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition duration-300">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Fade effect at the bottom -->
+            <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#000000] to-transparent z-0 pointer-events-none"></div>
+
+            <!-- Scroll Down Indicator (DISEÑO NUEVO: Digital Drop) -->
+            <!-- Eliminamos animate-bounce y usamos un diseño lineal y técnico -->
+            <button id="scroll-down-btn" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer group flex flex-col items-center gap-3 mix-blend-difference" aria-label="Scroll down">
+                <!-- Etiqueta de texto técnica -->
+                <span class="text-[10px] font-mono tracking-[0.4em] text-white/40 group-hover:text-white transition-colors duration-500">SCROLL</span>
+                
+                <!-- Línea vertical con animación de "gota" de luz -->
+                <div class="relative w-[1px] h-16 bg-white/10 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-[50%] bg-gradient-to-b from-transparent via-white to-transparent animate-drop"></div>
+                </div>
+            </button>
+
         </section>
 
         <Proyects />
@@ -45,4 +64,34 @@ import Proyects from '@components/Proyects.astro';
 
         <Contacto />
     </main>
+
+    <script>
+        document.getElementById('scroll-down-btn')?.addEventListener('click', () => {
+            const nextSection = document.getElementById('proyectos'); // O la sección que prefieras como siguiente
+            if (nextSection) {
+                nextSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+
+    <style>
+        /* Animación personalizada para la caída de luz */
+        @keyframes drop {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(250%);
+                opacity: 0;
+            }
+        }
+
+        .animate-drop {
+            animation: drop 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+        }
+    </style>
 </Layout>
