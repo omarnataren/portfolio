@@ -71,8 +71,11 @@ const { title, withSidebar = false, enableExitAnimations = false } = Astro.props
                     });
                 }, observerOptions);
         
-                const animatedItems = document.querySelectorAll('.animated-item');
-                animatedItems.forEach(item => observer.observe(item));
+                const sections = document.querySelectorAll('section, aside');
+                sections.forEach(section => {
+                    section.classList.add('animated-item');
+                    observer.observe(section);
+                });
 
                 // Animación estilo Apple para el título, subtítulo y botones
                 const heroElements = [

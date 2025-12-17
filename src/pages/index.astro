@@ -20,13 +20,13 @@ import Proyects from '@components/Proyects.astro';
         <section id="inicio" class="relative min-h-screen w-full mb-6 md:mb-0 flex flex-col justify-center items-center md:items-start border-b border-white/10 overflow-hidden">
             
             <div class="relative z-10 w-full max-w-5xl">
-                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 animated-item md:text-left">
+                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 md:text-left">
                     OMAR NATAREN
                 </h1>
-                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest animated-item md:text-left" style="transition-delay: 0.5s;">
+                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest md:text-left">
                     // INGENIERO DE SOFTWARE - ESPECIALIZADO EN ARQUITECTURA DE SISTEMAS ESCALABLES Y DISEÑO UI/UX
                 </h3>
-                <div id="hero-buttons" class="flex flex-wrap justify-center md:justify-start gap-4 animated-item" style="transition-delay: 1s;">
+                <div id="hero-buttons" class="flex flex-wrap justify-center md:justify-start gap-4">
                     <a href="#proyectos" name="proyectos" class="md:text-xl text-md text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300 flex items-center justify-center">
                         [ EXPLORAR TRABAJO ]
                     </a>
@@ -61,9 +61,28 @@ import Proyects from '@components/Proyects.astro';
     </main>
 
     <script>
-        document.body.style.overflow = 'hidden';
-
         let isNavigating = false;
+        let initialHashLoad = false;
+
+        // 1. Lógica de Inicialización: Verificar si venimos con un ancla (ej: #proyectos)
+        const checkInitialScroll = () => {
+            // Si hay hash en la URL (ej: #proyectos) y no es #inicio, permitimos el scroll
+            if (window.location.hash && window.location.hash !== '#inicio') {
+                document.body.style.overflow = 'auto';
+                initialHashLoad = true;
+                // Damos un margen de tiempo para que el navegador restaure la posición del scroll sin que el bloqueo lo intercepte
+                setTimeout(() => {
+                    initialHashLoad = false;
+                }, 1500);
+            } else {
+                // Si estamos en el root puro, bloqueamos el scroll (Game Mode)
+                document.body.style.overflow = 'hidden';
+                window.scrollTo(0, 0);
+            }
+        };
+        
+        // Ejecutar inmediatamente al cargar
+        checkInitialScroll();
 
         const unlockAndScroll = (targetId) => {
             isNavigating = true;
@@ -71,6 +90,8 @@ import Proyects from '@components/Proyects.astro';
             const target = document.getElementById(targetId);
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth' });
+                // Actualizar URL para mantener estado
+                history.pushState(null, null, `#${targetId}`);
             }
             
             setTimeout(() => {
@@ -80,9 +101,18 @@ import Proyects from '@components/Proyects.astro';
 
         // Detectar cuando el usuario regresa al inicio para volver a bloquear
         window.addEventListener('scroll', () => {
-            if (!isNavigating && window.scrollY < 5) {
+            // Si estamos en el proceso de carga inicial con hash, no bloqueamos nada
+            if (initialHashLoad) return;
+
+            // Aumentamos el umbral a 20px para móviles para evitar "rebotes" falsos
+            if (!isNavigating && window.scrollY < 20) {
                 document.body.style.overflow = 'hidden';
                 window.scrollTo(0, 0); 
+                
+                // Limpiamos el hash si volvemos al inicio
+                if (window.location.hash) {
+                    history.replaceState(null, null, ' ');
+                }
             }
         });
 
@@ -95,6 +125,18 @@ import Proyects from '@components/Proyects.astro';
         document.querySelector('a[name="proyectos"]')?.addEventListener('click', (e) => {
             e.preventDefault();
             unlockAndScroll('proyectos');
+        });
+
+        // Manejo de clicks en el Navbar lateral para desbloquear el scroll
+        document.querySelectorAll('.side-nav-item').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    unlockAndScroll(targetId);
+                }
+            });
         });
     </script>
 

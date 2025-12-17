@@ -1,0 +1,96 @@
+<div id="back-btn-wrapper" class="shrink-0 xl:absolute xl:right-full xl:mr-8 xl:top-5 animate-fade-in-opacity" style="opacity: 0; animation-fill-mode: forwards;">
+    <a id="back-btn" href="/#proyectos" class="text-secondary hover:text-white inline-flex items-center transition-all duration-300 text-sm md:text-base whitespace-nowrap">
+        <i class="fas fa-arrow-left mr-2"></i> Volver al Portafolio
+    </a>
+</div>
+
+<script>
+    function initBackButton() {
+        const btn = document.getElementById('back-btn');
+        const wrapper = document.getElementById('back-btn-wrapper');
+
+        if (!btn || !wrapper) return;
+
+        const syncWrapperSize = () => {
+            if (!btn.classList.contains('floating-back-btn')) {
+                wrapper.style.width = `${btn.offsetWidth}px`;
+                wrapper.style.height = `${btn.offsetHeight}px`;
+            }
+        };
+
+        const updateButtonPosition = () => {
+            const leftPos = wrapper.getBoundingClientRect().left;
+            if (btn.classList.contains('floating-back-btn')) {
+                btn.style.left = `${leftPos}px`;
+            }
+        };
+
+        window.addEventListener('resize', () => {
+            if (!btn.classList.contains('floating-back-btn')) syncWrapperSize();
+            updateButtonPosition();
+        });
+        
+        // Initial sync
+        syncWrapperSize();
+        // Force sync after a small delay to ensure layout is stable
+        setTimeout(syncWrapperSize, 100);
+
+        window.addEventListener('scroll', () => {
+            const rect = wrapper.getBoundingClientRect();
+            const isFloating = btn.classList.contains('floating-back-btn');
+
+            // Ajustamos el umbral a -50 para que el efecto sea más notorio al bajar
+            if (!isFloating && rect.top < -50) {
+                syncWrapperSize();
+                btn.classList.add('floating-back-btn');
+                updateButtonPosition();
+            } else if (isFloating && rect.top >= 20) {
+                btn.classList.remove('floating-back-btn');
+                btn.style.left = '';
+            }
+        });
+    }
+
+    // Run on DOMContentLoaded or immediately if already loaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initBackButton);
+    } else {
+        initBackButton();
+    }
+
+    // Support for Astro View Transitions
+    document.addEventListener('astro:page-load', initBackButton);
+</script>
+
+<style>
+    /* IMPORTANTE: Usamos 'is:global' o el selector :global() para clases que
+       se añaden dinámicamente con JS, de lo contrario Astro las ignora.
+    */
+    :global(.floating-back-btn) {
+        position: fixed;
+        top: 20px;
+        background-color: white;
+        color: black !important;
+        padding: 10px 20px;
+        border-radius: 9999px;
+        z-index: 100;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transform: translateX(-20px);
+        animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        font-weight: 600;
+        text-decoration: none; /* Asegura que no tenga subrayado */
+    }
+
+    :global(.floating-back-btn:hover) {
+        transform: translateX(-20px) scale(1.05);
+        background-color: #f0f0f0;
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-100px) translateX(-20px); opacity: 0; }
+        to { transform: translateY(0) translateX(-20px); opacity: 1; }
+    }
+
+    .animate-fade-in-opacity { animation: fade-in-opacity 1.5s ease-out forwards; }
+    @keyframes fade-in-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+</style>

@@ -1,0 +1,219 @@
+---
+interface Props {
+    images: string[];
+}
+
+const { images } = Astro.props;
+const carouselId = `carousel-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div id={carouselId} class="relative w-full h-[300px] md:h-[400px] overflow-hidden group mb-16 shadow-2xl">
+    
+    <!-- Gradients -->
+    <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-linear-to-r from-dark-bg to-transparent z-10 pointer-events-none"></div>
+    <div class="absolute inset-y-0 right-0 w-16 md:w-32 bg-linear-to-l from-dark-bg to-transparent z-10 pointer-events-none"></div>
+
+    <!-- Track -->
+    <div class="carousel-track flex h-full will-change-transform" style="transform: translateX(0);">
+        <!-- Slides injected by JS -->
+    </div>
+
+    <!-- Buttons -->
+    <button class="prev-btn absolute left-[5%] top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-4 backdrop-blur-sm transition-all z-20 hover:scale-110 border border-white/10 rounded-full cursor-pointer" aria-label="Previous slide">
+        <i class="fas fa-chevron-left text-2xl"></i>
+    </button>
+    
+    <button class="next-btn absolute right-[5%] top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-4 backdrop-blur-sm transition-all z-20 hover:scale-110 border border-white/10 rounded-full cursor-pointer" aria-label="Next slide">
+        <i class="fas fa-chevron-right text-2xl"></i>
+    </button>
+
+    <!-- Indicators -->
+    <div class="indicators-container absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20 cursor-default">
+        {images.map((_, i) => (
+            <button class="indicator w-3 h-3 rounded-full bg-white/40 hover:bg-white/60 transition-all duration-300 shadow-lg" data-index={i}></button>
+        ))}
+    </div>
+
+</div>
+
+<script define:vars={{ images, carouselId }}>
+    (function() {
+        const container = document.getElementById(carouselId);
+        if (!container) return;
+
+        const track = container.querySelector('.carousel-track');
+        const prevBtn = container.querySelector('.prev-btn');
+        const nextBtn = container.querySelector('.next-btn');
+        const indicators = container.querySelectorAll('.indicator');
+
+        if (!track || images.length === 0) return;
+
+        // Logic for clones (2 at start, 2 at end)
+        // Ensure we have enough images to clone. If < 2, duplicate.
+        let processedImages = [...images];
+        if (processedImages.length === 1) {
+            processedImages = [images[0], images[0], images[0]]; // Make it 3
+        } else if (processedImages.length === 2) {
+            processedImages = [images[0], images[1], images[0], images[1]]; // Make it 4
+        }
+
+        const numImages = processedImages.length;
+        
+        // Clones
+        const clonesStart = [processedImages[numImages - 2], processedImages[numImages - 1]].map(src => ({ src, type: 'clone' }));
+        const clonesEnd = [processedImages[0], processedImages[1]].map(src => ({ src, type: 'clone' }));
+        const realSlides = processedImages.map((src, i) => ({ src, type: 'real', realIndex: i }));
+
+        const slideData = [...clonesStart, ...realSlides, ...clonesEnd];
+        
+        let currentIndex = 2; // Start at first real slide
+        let isTransitioning = false;
+        const slideWidthPercent = 60; 
+
+        // Render Slides
+        track.innerHTML = slideData.map((slide, i) => `
+            <div class="carousel-slide min-w-[60%] h-full px-1 transition-all duration-500 ease-out transform origin-center flex items-center justify-center relative" data-index="${i}">
+                <div class="w-full h-full relative rounded-md overflow-hidden shadow-2xl transition-all duration-500 slide-inner">
+                    <img src="${slide.src}" class="w-full h-full object-cover" alt="Slide" loading="${i >= 1 && i <= 5 ? 'eager' : 'lazy'}" />
+                    <div class="absolute inset-0 bg-black/60 transition-opacity duration-500 overlay"></div>
+                </div>
+            </div>
+        `).join('');
+
+        const slides = track.querySelectorAll('.carousel-slide');
+
+        const updateCarousel = (useTransition = true) => {
+            // Center calculation: (100% - 60%) / 2 = 20%
+            const position = - (currentIndex * slideWidthPercent) + 20;
+
+            if (useTransition) {
+                track.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+            } else {
+                track.style.transition = 'none';
+            }
+            
+            track.style.transform = `translateX(${position}%)`;
+
+            // Focus Effect
+            slides.forEach((slide, i) => {
+                const overlay = slide.querySelector('.overlay');
+                
+                if (!useTransition) {
+                    slide.style.transition = 'none';
+                    if (overlay) overlay.style.transition = 'none';
+                } else {
+                    slide.style.transition = '';
+                    if (overlay) overlay.style.transition = '';
+                }
+
+                if (i === currentIndex) {
+                    slide.style.transform = 'scale(1)';
+                    slide.style.zIndex = '10';
+                    slide.style.opacity = '1';
+                    if (overlay) overlay.style.opacity = '0'; 
+                } else {
+                    slide.style.transform = 'scale(0.85)';
+                    slide.style.zIndex = '5';
+                    slide.style.opacity = '0.6'; 
+                    if (overlay) overlay.style.opacity = '1'; 
+                }
+            });
+
+            if (!useTransition) {
+                track.offsetHeight; // Force reflow
+            }
+
+            // Update Indicators
+            // Map current index to real index
+            // Real indices start at 2. 
+            // If currentIndex is 2 (Real 0), realIndex = 0.
+            // If currentIndex is 0 (Clone of last), realIndex = last.
+            
+            // Total real slides = numImages
+            // Formula: (currentIndex - 2 + numImages) % numImages
+            let realIndex = (currentIndex - 2) % numImages;
+            if (realIndex < 0) realIndex += numImages;
+
+            // Map back to original images length if we duplicated
+            const originalLength = images.length;
+            // If we duplicated, the indicators should probably reflect the original count?
+            // Actually, if we duplicated 1 image to 3, we have 3 slides but logically 1 image.
+            // Indicators usually map to unique content.
+            // For simplicity, let's just map to the processedImages length for now, 
+            // but hide extra indicators if we duplicated? 
+            // The indicators HTML is generated based on `images` (original).
+            // So we need `realIndex` modulo `originalLength`.
+            
+            const indicatorIndex = realIndex % originalLength;
+
+            indicators.forEach((dot, i) => {
+                if (i === indicatorIndex) {
+                    dot.classList.remove('bg-white/40', 'hover:bg-white/60');
+                    dot.classList.add('bg-white', 'scale-125');
+                } else {
+                    dot.classList.add('bg-white/40', 'hover:bg-white/60');
+                    dot.classList.remove('bg-white', 'scale-125');
+                }
+            });
+        };
+
+        const handleTransitionEnd = (e) => {
+            if (e.target !== track) return;
+            isTransitioning = false;
+            
+            // Teleport logic
+            // Last clone at start (index 1) -> Last Real (index numImages + 1)
+            // First clone at end (index numImages + 2) -> First Real (index 2)
+            
+            // Indices:
+            // 0: Clone (Last-1)
+            // 1: Clone (Last)
+            // 2: Real 0
+            // ...
+            // 2 + numImages - 1: Real Last
+            // 2 + numImages: Clone (Real 0)
+            // 2 + numImages + 1: Clone (Real 1)
+
+            const lastRealIndex = 2 + numImages - 1;
+
+            if (currentIndex >= 2 + numImages) {
+                // We are at end clones
+                // If currentIndex == 2 + numImages (Clone 0), go to Real 0 (2)
+                // If currentIndex == 2 + numImages + 1 (Clone 1), go to Real 1 (3)
+                currentIndex = 2 + (currentIndex - (2 + numImages));
+                requestAnimationFrame(() => updateCarousel(false));
+            } else if (currentIndex < 2) {
+                // We are at start clones
+                // If currentIndex == 1 (Clone Last), go to Real Last (lastRealIndex)
+                // If currentIndex == 0 (Clone Last-1), go to Real Last-1 (lastRealIndex - 1)
+                currentIndex = lastRealIndex - (1 - currentIndex);
+                requestAnimationFrame(() => updateCarousel(false));
+            }
+        };
+
+        track.addEventListener('transitionend', handleTransitionEnd);
+        
+        // Initial Render
+        updateCarousel(false);
+
+        prevBtn.addEventListener('click', () => {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            currentIndex--;
+            updateCarousel(true);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            currentIndex++;
+            updateCarousel(true);
+        });
+
+    })();
+</script>
+
+<style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>

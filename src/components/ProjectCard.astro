@@ -26,7 +26,7 @@ const {
 const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}, ${gradientTo});`;
 ---
 
-<article class="project-card border border-white/10 bg-highlight/50 rounded-md animated-item group">
+<article class="project-card border border-white/10 bg-highlight/50 rounded-md group">
     <!-- Imagen de fondo (Gradient) -->
     <div class="project-bg-image" style={gradientStyle}></div>
     
@@ -40,6 +40,9 @@ const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}
             )}
         </div>
     )}
+
+    <!-- Dark Gradient Overlay for Readability (Top-Left to Bottom-Right) -->
+    <div class="absolute inset-0 bg-gradient-to-br from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 z-5 pointer-events-none"></div>
 
     <div class="project-content p-6 h-full flex flex-col justify-between relative z-10">
         <div class="project-header transition-transform duration-300 group-hover:translate-y-4">
