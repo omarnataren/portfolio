@@ -1,0 +1,75 @@
+---
+interface Props {
+    name: string;
+    iconClass?: string;
+    svgPath?: string;
+    imageSrc?: string;
+    imageHoverSrc?: string;
+    viewBox?: string;
+    color: string;
+    textColorOnHover?: string;
+}
+
+const { name, iconClass, svgPath, imageSrc, imageHoverSrc, viewBox = "0 0 24 24", color, textColorOnHover = '#ffffff' } = Astro.props;
+---
+
+<div 
+    class="stack-item animated-item relative overflow-hidden px-5 py-3 text-sm rounded-lg bg-highlight border border-white/10 text-white flex items-center gap-3 group cursor-default"
+    style={`--hover-color: ${color}; --text-hover: ${textColorOnHover};`}
+>
+    <!-- Background Fill Layer -->
+    <div class="absolute inset-0 bg-[var(--hover-color)] w-0 group-hover:w-full transition-[width] duration-300 ease-out"></div>
+    
+    <!-- Content Layer -->
+    <div class="relative z-10 flex items-center gap-3">
+        <!-- Icon: Render FontAwesome class OR SVG OR Image -->
+        {iconClass ? (
+            <i class={`${iconClass} text-xl transition-colors duration-300`} style={`color: ${color};`}></i>
+        ) : svgPath ? (
+            <svg class="w-5 h-5 transition-colors duration-300 fill-current" viewBox={viewBox} style={`color: ${color};`}>
+                <path d={svgPath} />
+            </svg>
+        ) : imageSrc ? (
+            <div class="relative w-5 h-5">
+                <img 
+                    src={imageSrc} 
+                    alt={name} 
+                    loading="lazy" 
+                    class={`w-full h-full transition-opacity duration-300 ${imageHoverSrc ? 'group-hover:opacity-0' : 'group-hover:filter-hover'}`} 
+                    style={`filter: drop-shadow(0 0 0 ${color});`} 
+                />
+                {imageHoverSrc && (
+                    <img 
+                        src={imageHoverSrc} 
+                        alt={name} 
+                        loading="lazy" 
+                        class="absolute inset-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    />
+                )}
+            </div>
+        ) : null}
+        
+        <!-- Text -->
+        <span class="font-medium transition-colors duration-300" style="color: inherit;">
+            {name}
+        </span>
+    </div>
+</div>
+
+<style>
+    /* Force icon and text to the contrast color on hover */
+    .stack-item:hover i,
+    .stack-item:hover svg {
+        color: var(--text-hover) !important;
+        fill: var(--text-hover) !important;
+    }
+    
+    /* If no hover image is provided, tint the default image on hover */
+    .stack-item:hover img.group-hover\:filter-hover {
+        filter: drop-shadow(0 0 0 var(--text-hover)) !important;
+    }
+
+    .stack-item:hover span {
+        color: var(--text-hover) !important;
+    }
+</style>

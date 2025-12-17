@@ -1,0 +1,213 @@
+---
+import Layout from '@layouts/Layout.astro';
+import SideNavbar from '@components/SideNavbar.astro';
+
+const project = {
+    title: "Mi Tiendita POS",
+    subtitle: "Sistema de Punto de Venta Enterprise con Arquitectura de Microservicios.",
+    role: "Full Stack Developer (Angular/NestJS)",
+    timeline: "2024",
+    tags: ["Angular", "NestJS", "Supabase", "PostgreSQL", "JWT Auth", "RBAC"],
+    repoLink: "https://github.com/omarnataren/mi_tiendita"
+};
+---
+
+<Layout title={`${project.title} | Omar Nataren`}>
+
+
+    <main class="max-w-5xl mx-auto px-6 pt-12 pb-20 ">
+        
+        <!-- HEADER DEL PROYECTO -->
+        <header class="mb-16 relative">
+             <div class="flex flex-col md:flex-row md:items-center xl:block gap-6 mb-4 xl:mb-0">
+                <div id="back-btn-wrapper" class="flex-shrink-0 xl:absolute xl:right-full xl:mr-8 xl:top-5 animate-fade-in-opacity" style="opacity: 0; animation-fill-mode: forwards;">
+                    <a id="back-btn" href="/#proyectos" class="text-secondary hover:text-white inline-flex items-center transition-all duration-300 text-sm md:text-base whitespace-nowrap">
+                        <i class="fas fa-arrow-left mr-2"></i> Volver al Portafolio
+                    </a>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white animated-item m-0">
+                    {project.title}
+                </h1>
+            </div>
+            <p class="text-2xl text-secondary font-light tracking-wide animated-item">
+                {project.subtitle}
+            </p>
+        </header>
+
+        <!-- IMAGEN HERO (Abstracta de Ecommerce/POS) -->
+        <div class="w-full h-[400px] md:h-[500px] bg-gradient-to-r from-[#8e2de2] to-[#4a00e0] rounded-2xl mb-16 shadow-2xl flex items-center justify-center animated-item relative overflow-hidden" style="transition-delay: 0.2s;">
+            <!-- Decoración sutil -->
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+            
+            <div class="text-center text-white p-10 bg-black/20 backdrop-blur-md rounded-xl border border-white/10 relative z-10">
+                <i class="fas fa-cash-register text-6xl mb-4 text-purple-200"></i>
+                <p class="text-xl font-mono">Full-Stack POS System</p>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL (2 Columnas) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            
+            <!-- COLUMNA IZQUIERDA: Storytelling -->
+            <div class="lg:col-span-2 space-y-12 animated-item" style="transition-delay: 0.4s;">
+                
+                <!-- SECCIÓN 1: EL CONTEXTO (Enterprise Architecture) -->
+                <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-purple-400">01.</span> Más que un CRUD
+                    </h2>
+                    <p class="text-lg text-secondary leading-relaxed text-justify">
+                        Muchas tiendas locales operan con cuadernos o Excel, limitando su crecimiento. Mi objetivo era crear un sistema <strong>Punto de Venta (POS)</strong> que rivalizara con el software de cadenas como OXXO, pero accesible.
+                    </p>
+                    <p class="text-lg text-secondary leading-relaxed text-justify mt-4">
+                        No se trataba solo de registrar ventas, sino de construir una infraestructura robusta. Implementé una arquitectura desacoplada utilizando <strong>Angular</strong> para una interfaz reactiva y rápida, y <strong>NestJS</strong> para un backend escalable y tipado, garantizando que el sistema pudiera manejar inventarios complejos y múltiples transacciones simultáneas.
+                    </p>
+                </section>
+
+                <!-- SECCIÓN 2: SEGURIDAD Y ROLES (RBAC) -->
+                <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-purple-400">02.</span> Seguridad Granular (RBAC)
+                    </h2>
+                    <p class="text-lg text-secondary leading-relaxed text-justify mb-4">
+                        En un entorno retail, la seguridad es crítica. Diseñé un sistema de autenticación con <strong>JWT (JSON Web Tokens)</strong> y un estricto Control de Acceso Basado en Roles (RBAC).
+                    </p>
+                    <ul class="list-disc list-inside text-secondary space-y-2 ml-4">
+                        <li><strong>Vendedor:</strong> Solo puede escanear productos y generar ventas. Interfaz simplificada para velocidad.</li>
+                        <li><strong>Encargado de Paquetería:</strong> Acceso exclusivo al módulo de inventarios y recepción de mercancía.</li>
+                        <li><strong>Admin (Encargado):</strong> Visión total del dashboard, métricas de ventas y gestión de usuarios.</li>
+                    </ul>
+                </section>
+
+                <!-- SECCIÓN 3: EXPERIENCIA "HARDWARE READY" -->
+                <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-purple-400">03.</span> Simulación de Hardware
+                    </h2>
+                    <ul class="space-y-6 mt-6">
+                        <li class="bg-highlight p-6 rounded-xl border border-white/5 hover:border-purple-500/30 transition-colors">
+                            <h3 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
+                                <i class="fas fa-receipt text-purple-400"></i> Generación de Tickets
+                            </h3>
+                            <p class="text-secondary text-sm">
+                                El sistema completa el ciclo de venta generando un ticket digital formateado profesionalmente. La interfaz está optimizada para entrada rápida de datos, pensada para conectarse plug-and-play con <strong>escáneres de códigos de barras</strong> e <strong>impresoras térmicas</strong>.
+                            </p>
+                        </li>
+                        <li class="bg-highlight p-6 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors">
+                            <h3 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
+                                <i class="fas fa-database text-blue-400"></i> Integridad de Datos (PostgreSQL)
+                            </h3>
+                            <p class="text-secondary text-sm">
+                                Usando <strong>Supabase (PostgreSQL)</strong>, aseguré la integridad referencial de los datos. A diferencia de soluciones NoSQL rápidas, aquí cada transacción es ACID, garantizando que el inventario siempre cuadre con las ventas reportadas, vital para la contabilidad real.
+                            </p>
+                        </li>
+                    </ul>
+                </section>
+
+            </div>
+
+            <!-- COLUMNA DERECHA: Meta-información (Sticky) -->
+            <aside class="lg:col-span-1 animated-item" style="transition-delay: 0.6s;">
+                <div class="bg-highlight p-8 rounded-2xl border border-white/10 sticky top-24">
+                    
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-white/50 tracking-widest uppercase mb-2">ROL</h3>
+                        <p class="text-white text-lg font-medium">{project.role}</p>
+                        <p class="text-secondary text-sm mt-1">{project.timeline}</p>
+                    </div>
+
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-white/50 tracking-widest uppercase mb-4">TECH STACK</h3>
+                        <div class="flex flex-wrap gap-2">
+                            {project.tags.map((tag) => (
+                                <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-white hover:bg-purple-500/20 transition-colors cursor-default">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <a href={project.repoLink} target="_blank" class="block w-full py-4 bg-white text-black text-center font-bold hover:scale-105 transition-transform rounded-lg group">
+                        VER CÓDIGO <i class="fab fa-github ml-2 group-hover:rotate-12 transition-transform"></i>
+                    </a>
+
+                </div>
+            </aside>
+
+        </div>
+        
+        
+    </main>
+
+    <!-- Script para el botón de volver -->
+    <script>
+        const btn = document.getElementById('back-btn');
+        const wrapper = document.getElementById('back-btn-wrapper');
+
+        if (btn && wrapper) {
+            const syncWrapperSize = () => {
+                if (!btn.classList.contains('floating-back-btn')) {
+                    wrapper.style.width = `${btn.offsetWidth}px`;
+                    wrapper.style.height = `${btn.offsetHeight}px`;
+                }
+            };
+
+            const updateButtonPosition = () => {
+                const leftPos = wrapper.getBoundingClientRect().left;
+                if (btn.classList.contains('floating-back-btn')) {
+                    btn.style.left = `${leftPos}px`;
+                }
+            };
+
+            window.addEventListener('resize', () => {
+                if (!btn.classList.contains('floating-back-btn')) syncWrapperSize();
+                updateButtonPosition();
+            });
+            
+            syncWrapperSize();
+
+            window.addEventListener('scroll', () => {
+                const rect = wrapper.getBoundingClientRect();
+                const isFloating = btn.classList.contains('floating-back-btn');
+
+                if (!isFloating && rect.top < -20) {
+                    syncWrapperSize();
+                    btn.classList.add('floating-back-btn');
+                    updateButtonPosition();
+                } else if (isFloating && rect.top >= 20) {
+                    btn.classList.remove('floating-back-btn');
+                    btn.style.left = '';
+                }
+            });
+        }
+    </script>
+
+    <style>
+        .floating-back-btn {
+            position: fixed;
+            top: 20px;
+            background-color: white;
+            color: black !important;
+            padding: 10px 20px;
+            border-radius: 9999px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateX(-20px);
+            animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            font-weight: 600;
+        }
+
+        .floating-back-btn:hover {
+            transform: translateX(-20px) scale(1.05);
+            background-color: #f0f0f0;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100px) translateX(-20px); opacity: 0; }
+            to { transform: translateY(0) translateX(-20px); opacity: 1; }
+        }
+
+        .animate-fade-in-opacity { animation: fade-in-opacity 1.5s ease-out forwards; }
+        @keyframes fade-in-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+    </style>
+</Layout>

@@ -1,0 +1,31 @@
+---
+import StackItem from '@components/StackItem.astro';
+---
+
+<section id="stack" class="pt-20 pb-20 border-b border-black">
+        <h2 class="section-title text-white animated-item">
+            &gt; STACK_TECNOLÓGICO
+        </h2>
+        <div class="flex flex-wrap gap-4 justify-start">
+            <StackItem name="Java" iconClass="fab fa-java" color="#e34c26" />
+            <StackItem name="Python / Flask" iconClass="fab fa-python" color="#ffd43b" textColorOnHover="#000000" />
+            <StackItem name="TS / JavaScript" iconClass="fab fa-js" color="#f7df1e" textColorOnHover="#000000" />
+            <StackItem name="React / Native" iconClass="fab fa-react" color="#61dafb" textColorOnHover="#000000" />
+            <StackItem name="Angular" iconClass="fab fa-angular" color="#dd0031" />
+            <StackItem 
+                name="Flutter / Dart" 
+                svgPath="M14.314 0L2.3 12 6 15.7 21.684.013h-7.357zm.014 11.072L7.857 17.53l6.47 6.47H21.7l-6.46-6.468 6.46-6.46h-7.37z" 
+                color="#02569b" 
+            />
+            <StackItem 
+                name="NestJS" 
+                imageSrc="/images/nestjs.svg" 
+                imageHoverSrc="/images/nestjs_hover.svg"
+                color="#E0234E" 
+            />
+            <StackItem name="PostgreSQL / SQL" iconClass="fas fa-database" color="#336791" />
+            <StackItem name="AWS / Cloud" iconClass="fab fa-aws" color="#ff9900" textColorOnHover="#000000" />
+            <StackItem name="Git / GitHub" iconClass="fab fa-git-alt" color="#f05032" />
+            
+        </div>
+    </section>

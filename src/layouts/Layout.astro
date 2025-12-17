@@ -1,0 +1,150 @@
+---
+import '../styles/global.css';
+import Footer from '@components/Footer.astro';
+
+interface Props {
+	title: string;
+    withSidebar?: boolean;
+    enableExitAnimations?: boolean;
+}
+
+const { title, withSidebar = false, enableExitAnimations = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Portafolio de Omar Nataren - Software Engineer" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        
+		<title>{title}</title>
+	</head>
+	<body 
+        class:list={["bg-dark-bg text-primary font-code-mono antialiased", { "md:pl-20": withSidebar }]}
+        data-exit-animations={enableExitAnimations.toString()}
+    >
+		<slot />
+        
+        <script>
+            // Forzar scroll al inicio al recargar
+            if (history.scrollRestoration) {
+                history.scrollRestoration = 'manual';
+            } else {
+                window.onbeforeunload = function () {
+                    window.scrollTo(0, 0);
+                }
+            }
+            
+            // Script para detectar cuando los elementos entran en pantalla
+            document.addEventListener('DOMContentLoaded', () => {
+                window.scrollTo(0, 0);
+                
+                const enableExitAnimations = document.body.getAttribute('data-exit-animations') === 'true';
+
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '-7% 0px -7% 0px', // Margen para que desaparezca un poco antes de salir
+                    threshold: 0.1
+                };
+        
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.remove('has-exited');
+                            entry.target.classList.add('is-visible');
+                            // Si NO queremos animaciones de salida, dejamos de observar para ahorrar recursos
+                            if (!enableExitAnimations) {
+                                observer.unobserve(entry.target);
+                            }
+                        } else {
+                            // Solo si las animaciones de salida están habilitadas
+                            if (enableExitAnimations) {
+                                entry.target.classList.remove('is-visible');
+                                entry.target.classList.add('has-exited');
+                            }
+                        }
+                    });
+                }, observerOptions);
+        
+                const animatedItems = document.querySelectorAll('.animated-item');
+                animatedItems.forEach(item => observer.observe(item));
+
+                // Animación estilo Apple para el título, subtítulo y botones
+                const heroElements = [
+                    document.getElementById('hero-title'),
+                    document.getElementById('hero-subtitle'),
+                    document.getElementById('hero-buttons')
+                ];
+                
+                if (heroElements.some(el => el)) {
+                    // Optimización: Usar requestAnimationFrame para no saturar el evento scroll
+                    let ticking = false;
+
+                    window.addEventListener('scroll', () => {
+                        if (!ticking) {
+                            window.requestAnimationFrame(() => {
+                                const scrollY = window.scrollY;
+                                
+                                // Ajustamos para que desaparezca más rápido (factor 0.003 en lugar de 0.002)
+                                // y permitimos que la escala baje un poco más (hasta 0.5)
+                                const scale = Math.max(0.5, 1 - scrollY * 0.0015);
+                                const opacity = Math.max(0, 1 - scrollY * 0.003);
+
+                                heroElements.forEach(el => {
+                                    if (el) {
+                                        // Sobrescribimos la transición para que sea instantánea al hacer scroll
+                                        el.style.transition = 'transform 0s, opacity 0s';
+                                        el.style.transform = `scale(${scale})`;
+                                        el.style.opacity = opacity.toString();
+                                        
+                                        // Si la opacidad es 0, ocultamos para evitar interacción
+                                        el.style.pointerEvents = opacity <= 0 ? 'none' : 'auto';
+                                        
+                                        // Hint para el navegador
+                                        el.style.willChange = 'transform, opacity';
+                                    }
+                                });
+                                
+                                ticking = false;
+                            });
+                            
+                            ticking = true;
+                        }
+                    });
+                }
+            });
+        </script>
+        <Footer />
+	</body>
+</html>
+
+<style is:global>
+	html {
+		scroll-behavior: smooth;
+	}
+	
+	body {
+		padding-left: 0; 
+	}
+
+	.animated-item { opacity: 0; }
+    
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 3rem;
+        text-align: left;
+        border-bottom: 2px solid #333333;
+        padding-bottom: 10px;
+    }
+    @media (min-width: 768px) {
+        .section-title {
+            font-size: 3.5rem;
+        }
+    }
+</style>

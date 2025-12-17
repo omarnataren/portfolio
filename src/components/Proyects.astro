@@ -1,0 +1,48 @@
+---
+import ProjectCard from '@components/ProjectCard.astro';
+---
+
+<section id="proyectos" class="pt-8 pb-20 border-b border-black">
+        <h2 class="section-title text-white animated-item">
+            &gt; PROYECTOS
+        </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <ProjectCard 
+                    title="Legado"
+                    tech="Flutter / Firebase"
+                    description="App móvil desarrollada en Teteocán para conectar viajeros con anfitriones de cultura local."
+                    pageLink='/proyectos/legado'
+                    gradientFrom="#ff416c"
+                    gradientTo="#ff4b2b"
+                />
+                <ProjectCard 
+                    title="Cisco Pkt Net Config"
+                    tech="Networking / Simulation"
+                    description="Simulaciones y configuraciones avanzadas de redes utilizando Cisco Packet Tracer."
+                    pageLink='/proyectos/ciscoPKTBuilder'
+                    gradientFrom="#0f2027"
+                    gradientTo="#2c5364"
+                    image="/images/projects/ciscoPKT/Cisco_img1.png"
+                />
+
+                <ProjectCard 
+                    title="Mi Tiendita"
+                    tech="Angular / NestJS"
+                    description="Plataforma Full-Stack de E-commerce con panel de administración y pasarela de pagos."
+                    pageLink='/proyectos/miTiendita'
+                    gradientFrom="#8e2de2"
+                    gradientTo="#4a00e0"
+                />
+
+                <ProjectCard 
+                    title="Optimizador de Rutas"
+                    tech="Python / Algorithms"
+                    description="Aplicación para el cálculo eficiente de rutas logísticas usando teoría de grafos."
+                    pageLink='/proyectos/optimizadorRutas'
+                    gradientFrom="#11998e"
+                    gradientTo="#38ef7d"
+                />
+                
+            </div>
+        </section>

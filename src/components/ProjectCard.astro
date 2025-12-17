@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+    title: string;
+    tech: string;
+    description: string;
+    link?: string;
+    gradientFrom?: string;
+    gradientTo?: string;
+    pageLink?: string;
+    image?: ImageMetadata | string;
+}
+
+const { 
+    title, 
+    tech, 
+    description, 
+    link, 
+    pageLink,
+    image,
+    gradientFrom = "#333", 
+    gradientTo = "#000" 
+} = Astro.props;
+
+const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}, ${gradientTo});`;
+---
+
+<article class="project-card border border-white/10 bg-highlight/50 rounded-xl animated-item group">
+    <!-- Imagen de fondo (Gradient) -->
+    <div class="project-bg-image" style={gradientStyle}></div>
+    
+    <!-- Imagen superpuesta (opcional) -->
+    {image && (
+        <div class="project-overlay-image">
+            {typeof image === 'string' ? (
+                <img src={image} alt={title} class="w-full h-full object-cover" />
+            ) : (
+                <Image src={image} alt={title} class="w-full h-full object-cover" />
+            )}
+        </div>
+    )}
+
+    <div class="project-content p-6 h-full flex flex-col justify-between relative z-10">
+        <div class="project-header transition-transform duration-300 group-hover:translate-y-4">
+            <span class="text-xs text-secondary font-bold tracking-wider uppercase">[{tech}]</span>
+            <h3 class="text-2xl font-bold mt-2 text-white">{title}</h3>
+        </div>
+        
+        <p class="project-description text-secondary mt-4 transition-all duration-300 group-hover:opacity-0 group-hover:translate-y-4">
+            {description}
+        </p>
+        
+        <div class="mt-4 pt-4 border-t border-white/10 flex justify-end">
+            {link && (
+            <a href={link} target="_blank" class="text-white font-bold hover:text-secondary text-sm flex items-center gap-2">
+                VER EN GITHUB <i class="fas fa-arrow-right"></i>
+            </a>
+            )}
+            {pageLink && (
+            <a href={pageLink} target="_self" class="text-white font-bold hover:text-secondary text-sm flex items-center gap-2">
+                VER MÁS <i class="fas fa-arrow-right"></i>
+            </a>
+            )}
+        </div>
+        
+    </div>
+</article>
+
+<style>
+    .project-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 280px;
+    }
+    
+    .project-bg-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 0;
+        filter: brightness(0.4);
+    }
+    
+    .project-card:hover .project-bg-image {
+        opacity: 1;
+    }
+
+    .project-overlay-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 1;
+        mix-blend-mode: overlay; /* Mezcla suave con el gradiente */
+        filter: grayscale(100%) contrast(1.2); /* Estilo opcional para que combine mejor */
+    }
+
+    .project-card:hover .project-overlay-image {
+        opacity: 0.4; /* Transparencia para que se vea el gradiente debajo */
+    }
+</style>

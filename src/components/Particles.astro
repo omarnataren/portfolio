@@ -1,0 +1,164 @@
+<div id="particles-container" class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+    <canvas id="hero-canvas"></canvas>
+</div>
+
+<script>
+    const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
+    
+    let particlesArray: Particle[] = [];
+    let hue = 0; 
+
+    // Límites para rendimiento
+    const maxParticles = 300; 
+
+    // Variable para rastrear la posición anterior y calcular la dirección del mouse
+    let lastMouse = {
+        x: undefined as number | undefined,
+        y: undefined as number | undefined,
+    }
+
+    window.addEventListener('mousemove', function(event) {
+        const rect = canvas.getBoundingClientRect();
+        const currentX = event.clientX - rect.left;
+        const currentY = event.clientY - rect.top;
+        
+        // Si es la primera vez que se mueve, solo guardamos posición y salimos
+        if (lastMouse.x === undefined || lastMouse.y === undefined) {
+            lastMouse.x = currentX;
+            lastMouse.y = currentY;
+            return;
+        }
+
+        // Calculamos el vector de movimiento (Delta)
+        const dx = currentX - lastMouse.x;
+        const dy = currentY - lastMouse.y;
+        
+        // Calculamos la distancia recorrida
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // 1. UMBRAL DE MOVIMIENTO: Solo generar si se movió más de 5px
+        // Esto evita que distraiga con micromovimientos involuntarios
+        if (distance > 5) {
+            // Generamos 1 partícula por evento (suficiente para un rastro elegante)
+            // Pasamos dx y dy para calcular la dirección contraria
+            particlesArray.push(new Particle(currentX, currentY, dx, dy));
+            
+            // Actualizamos la última posición conocida
+            lastMouse.x = currentX;
+            lastMouse.y = currentY;
+        }
+
+        // Limpieza preventiva
+        if (particlesArray.length > maxParticles) {
+            particlesArray.splice(0, particlesArray.length - maxParticles);
+        }
+    });
+
+    class Particle {
+        x: number;
+        y: number;
+        size: number;
+        speedX: number;
+        speedY: number;
+        color: string;
+
+        constructor(x: number, y: number, dx: number, dy: number) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 6 + 2; 
+            
+            // 2. FÍSICA INVERSA (Lado Contrario):
+            // Normalizamos el vector de movimiento para obtener solo la dirección pura
+            const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+            const dirX = dx / dist;
+            const dirY = dy / dist;
+
+            // Velocidad base opuesta (-dir) + un poco de dispersión (spread) para que no sea una línea aburrida
+            const speed = Math.random() * 2 + 1; // Velocidad entre 1 y 3
+            const spread = 0.8; // Factor de caos lateral
+
+            // La magia está en el signo negativo (-) antes de dirX/dirY
+            this.speedX = (-dirX * speed) + (Math.random() * spread - spread/2);
+            this.speedY = (-dirY * speed) + (Math.random() * spread - spread/2);
+            
+            this.color = 'hsl(' + hue + ', 100%, 50%)'; 
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            // Desvanecimiento lento para estelas largas
+            if (this.size > 0.2) this.size -= 0.03; 
+        }
+
+        draw() {
+            if (!ctx) return;
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function handleParticles() {
+        for (let i = 0; i < particlesArray.length; i++) {
+            particlesArray[i].update();
+            particlesArray[i].draw();
+            
+            if (particlesArray[i].size <= 0.3) {
+                particlesArray.splice(i, 1);
+                i--;
+            }
+        }
+    }
+
+    function animate() {
+        if (!ctx || !canvas) return;
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        handleParticles();
+        
+        // 3. COLOR LENTO: Incremento mucho más pequeño para suavidad
+        hue += 0.5; 
+        if (hue > 360) hue = 0; 
+        
+        if (isAnimating) {
+            requestAnimationFrame(animate);
+        }
+    }
+
+    function resizeCanvas() {
+        if (!canvas) return;
+        const parent = canvas.parentElement;
+        if (parent) {
+            canvas.width = parent.clientWidth;
+            canvas.height = parent.clientHeight;
+        }
+    }
+    
+    // Observer para pausar si no se ve (ahorra batería)
+    let isAnimating = true;
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                if (!isAnimating) {
+                    isAnimating = true;
+                    animate();
+                }
+            } else {
+                isAnimating = false;
+            }
+        });
+    });
+    
+    const container = document.getElementById('particles-container');
+    if (container) observer.observe(container);
+
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Iniciar
+    resizeCanvas();
+    animate();
+</script>

@@ -1,1 +1,112 @@
+/* 1. Nueva forma de importar Tailwind en v4 */
 @import "tailwindcss";
+
+@font-face {
+  font-family: 'Pixelon';
+  src: url('/fonts/Pixelon.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 2. Configuración del TEMA (Colores, Fuentes, Animaciones) */
+@theme {
+  /* Definimos tus colores personalizados */
+  --color-primary: #FFFFFF;
+  --color-secondary: #AAAAAA;
+  --color-dark-bg: #000000;
+  --color-highlight: #1a1a1a;
+
+  /* Tu fuente tipo código */
+  --font-code-mono: "Pixelon", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-montserrat: "Montserrat", sans-serif;
+
+  /* Definimos las animaciones personalizadas */
+  --animate-fade-in-slow: fade-in 1.5s ease-out forwards;
+  --animate-float-subtle: float 4s ease-in-out infinite;
+
+  /* Keyframes para las animaciones */
+  @keyframes fade-in {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+  }
+}
+
+/* 3. Estilos globales extra */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    padding-left: 0;
+    /* Aseguramos que el fondo sea negro por defecto */
+    background-color: var(--color-dark-bg); 
+    color: var(--color-primary);
+}
+
+p, span {
+    font-family: var(--font-montserrat);
+}
+
+@media (min-width: 768px) {
+    body {
+        padding-left: 80px; 
+    }
+}
+
+/* Animación al hacer scroll */
+.animated-item { 
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1.0s ease-out, transform 1.0s ease-out;
+}
+
+.animated-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animated-item.has-exited {
+    opacity: 0;
+    transform: translateY(0);
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    text-align: left;
+    border-bottom: 2px solid #333333;
+    padding-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+    .section-title {
+        font-size: 3.5rem;
+    }
+}
+
+h1, h2, h3, h4, h5, h6, p, span, strong{
+  cursor: default;
+} 
+
+a, a h1, a h2, a h3, a h4, a h5, a h6, a p, a span, a strong {
+  cursor: pointer;
+}
+
+button{
+  cursor: pointer;
+}

@@ -1,0 +1,394 @@
+---
+import Layout from '@layouts/Layout.astro';
+
+const project = {
+    title: "Cisco Net Config",
+    subtitle: "Automatización de redes con una interfaz web intuitiva inspirada en el ecosistema Cisco.",
+    role: "Lead Architect & Full Stack Dev",
+    timeline: "2024",
+    tags: ["Python", "Flask", "Web UI (HTML/JS)", "Cisco CLI", "Automation"],
+    repoLink: "https://github.com/omarnataren/Cisco-Pkt-net-config"
+};
+---
+
+<Layout title={`${project.title} | Omar Nataren`}>
+
+    <main class="max-w-5xl mx-auto px-6 pt-12 pb-20">
+        
+        <!-- HEADER DEL PROYECTO -->
+        <header class="mb-12 relative">
+            <div class="flex flex-col md:flex-row md:items-center xl:block gap-6 mb-4 xl:mb-0">
+                <div id="back-btn-wrapper" class="shrink-0 xl:absolute xl:right-full xl:mr-14 xl:top-5 animate-fade-in-opacity" style="opacity: 0; animation-fill-mode: forwards;">
+                    <a id="back-btn" href="/#proyectos" class="text-secondary hover:text-white inline-flex items-center transition-all duration-300 text-sm md:text-base whitespace-nowrap">
+                        <i class="fas fa-arrow-left mr-2"></i> Volver al Portafolio
+                    </a>
+                </div>
+                <h1 class="text-5xl md:text-7xl mb-2 font-extrabold text-white animated-item m-0">
+                    {project.title}
+                </h1>
+            </div>
+            <p class="text-2xl text-secondary font-light tracking-wide animated-item">
+                {project.subtitle}
+            </p>
+        </header>
+
+        <div class="relative w-full max-w-7xl mx-auto mb-16 animated-item" style="transition-delay: 0.2s;">
+            
+            <div class="relative w-full h-[300px] md:h-[400px] overflow-hidden group">
+                
+                <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-linear-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute inset-y-0 right-0 w-16 md:w-32 bg-linear-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none"></div>
+
+                <!-- Pista del Carrusel -->
+                <div id="carousel-track" class="flex h-full will-change-transform" style="transform: translateX(0);">
+                    <!-- Slides inyectados por JS -->
+                </div>
+
+                <!-- Botones de Navegación -->
+                <button id="prev-btn" class="absolute left-[5%] top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-4 rounded-full backdrop-blur-sm transition-all z-20 hover:scale-110 border border-white/10" aria-label="Previous slide">
+                    <i class="fas fa-chevron-left text-2xl"></i>
+                </button>
+                
+                <button id="next-btn" class="absolute right-[5%] top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white p-4 rounded-full backdrop-blur-sm transition-all z-20 hover:scale-110 border border-white/10" aria-label="Next slide">
+                    <i class="fas fa-chevron-right text-2xl"></i>
+                </button>
+
+                <!-- Indicadores -->
+                <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20 cursor-default">
+                    <button class="w-3 h-3 rounded-full bg-white transition-all duration-300 indicator shadow-lg" data-index="0"></button>
+                    <button class="w-3 h-3 rounded-full bg-white/40 hover:bg-white/60 transition-all duration-300 indicator shadow-lg" data-index="1"></button>
+                    <button class="w-3 h-3 rounded-full bg-white/40 hover:bg-white/60 transition-all duration-300 indicator shadow-lg" data-index="2"></button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL (2 Columnas) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            
+            <!-- COLUMNA IZQUIERDA: Storytelling -->
+            <div class="lg:col-span-2 space-y-12 animated-item" style="transition-delay: 0.4s;">
+                
+                <!-- SECCIÓN 1: EL CUELLO DE BOTELLA -->
+                <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-blue-400">01.</span> El Cuello de Botella
+                    </h2>
+                    <p class="text-lg text-secondary leading-relaxed text-justify">
+                        En la ingeniería de redes, la configuración manual es el enemigo de la eficiencia. Durante nuestra formación académica, nos enfrentamos a exámenes de certificación Cisco brutales: escenarios con docenas de routers y switches que debían configurarse comando por comando. 
+                    </p>
+                    <p class="text-lg text-secondary leading-relaxed text-justify mt-4">
+                        Estos exámenes duraban entre 3 y 4 horas. El problema no era la falta de conocimiento técnico, sino la velocidad física de tecleo y la propensión a errores de sintaxis en la consola. Identifiqué la necesidad de una herramienta que abstrajera esta complejidad.
+                    </p>
+                </section>
+
+                <!-- SECCIÓN 2: LA SOLUCIÓN (UX FIRST) -->
+                <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-blue-400">02.</span> Automatización con UX Profesional
+                    </h2>
+                    <p class="text-lg text-secondary leading-relaxed text-justify mb-4">
+                        En lugar de crear un simple script de consola, desarrollé una aplicación web completa. Diseñé una interfaz gráfica (UI) inspirada en los dashboards profesionales de Cisco, utilizando <strong>HTML, CSS y JavaScript</strong> servidos a través de <strong>Flask</strong>.
+                    </p>
+                    <p class="text-lg text-secondary leading-relaxed text-justify">
+                        Esta interfaz permite a los usuarios seleccionar visualmente sus dispositivos, asignar direcciones IP y protocolos mediante formularios validados, eliminando los errores de sintaxis. El sistema transforma estos inputs visuales en configuraciones CLI perfectas o archivos <code>.pkt</code> listos para usar, reduciendo el tiempo de trabajo de horas a minutos.
+                    </p>
+                </section>
+
+                <!-- SECCIÓN 3: ARQUITECTURA -->
+                <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-blue-400">03.</span> Arquitectura Modular
+                    </h2>
+                    <ul class="space-y-6 mt-6">
+                        <li class="bg-highlight p-6 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors">
+                            <h3 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
+                                <i class="fab fa-python text-blue-400"></i> Python & Flask Core
+                            </h3>
+                            <p class="text-secondary text-sm">
+                                El backend actúa como el cerebro lógico. Recibe los datos estructurados del frontend, aplica reglas de negocio de redes (cálculo de subredes, validación de ACLs) y orquesta la generación de archivos.
+                            </p>
+                        </li>
+                        <li class="bg-highlight p-6 rounded-xl border border-white/5 hover:border-blue-500/30 transition-colors">
+                            <h3 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
+                                <i class="fas fa-desktop text-green-400"></i> Interfaz Web Reactiva
+                            </h3>
+                            <p class="text-secondary text-sm">
+                                El frontend no es solo estético; guía al ingeniero a través del flujo de configuración, previniendo conflictos de IP antes de que ocurran y proporcionando una experiencia visual similar a configurar hardware real de Cisco, pero simplificada.
+                            </p>
+                        </li>
+                    </ul>
+                </section>
+
+                 <!-- SECCIÓN 4: RESULTADO -->
+                 <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-blue-400">04.</span> El Impacto
+                    </h2>
+                    <div class="bg-blue-900/20 border-l-4 border-blue-500 p-6 rounded-r-lg">
+                        <p class="text-lg text-white font-medium italic">
+                            "Logramos reducir el tiempo de resolución de ejercicios de 4 horas o más a solo 30 minutos."
+                        </p>
+                        <p class="text-secondary text-sm mt-2">
+                            El proyecto evolucionó de una herramienta personal a una solución colaborativa, demostrando que una buena interfaz de usuario puede potenciar drásticamente la productividad en tareas de infraestructura.
+                        </p>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- COLUMNA DERECHA: Meta-información (Sticky) -->
+            <aside class="lg:col-span-1 animated-item" style="transition-delay: 0.6s;">
+                <div class="bg-highlight p-8 rounded-2xl border border-white/10 sticky top-24">
+                    
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-white/50 tracking-widest uppercase mb-2">ROL</h3>
+                        <p class="text-white text-lg font-medium">{project.role}</p>
+                        <p class="text-secondary text-sm mt-1">{project.timeline}</p>
+                    </div>
+
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-white/50 tracking-widest uppercase mb-4">TECH STACK</h3>
+                        <div class="flex flex-wrap gap-2">
+                            {project.tags.map((tag) => (
+                                <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-white hover:bg-blue-500/20 transition-colors cursor-default">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <a href={project.repoLink} target="_blank" class="block w-full py-4 bg-white text-black text-center font-bold hover:scale-105 transition-transform rounded-lg group">
+                        VER CÓDIGO <i class="fab fa-github ml-2 group-hover:rotate-12 transition-transform"></i>
+                    </a>
+
+                </div>
+            </aside>
+
+        </div>
+        
+        
+
+    </main>
+
+    <!-- Script para el botón de volver (Reutilizado) -->
+    <script>
+        const btn = document.getElementById('back-btn');
+        const wrapper = document.getElementById('back-btn-wrapper');
+
+        if (btn && wrapper) {
+            const syncWrapperSize = () => {
+                if (!btn.classList.contains('floating-back-btn')) {
+                    wrapper.style.width = `${btn.offsetWidth}px`;
+                    wrapper.style.height = `${btn.offsetHeight}px`;
+                }
+            };
+
+            const updateButtonPosition = () => {
+                const leftPos = wrapper.getBoundingClientRect().left;
+                if (btn.classList.contains('floating-back-btn')) {
+                    btn.style.left = `${leftPos}px`;
+                }
+            };
+
+            window.addEventListener('resize', () => {
+                if (!btn.classList.contains('floating-back-btn')) syncWrapperSize();
+                updateButtonPosition();
+            });
+            
+            syncWrapperSize();
+
+            window.addEventListener('scroll', () => {
+                const rect = wrapper.getBoundingClientRect();
+                const isFloating = btn.classList.contains('floating-back-btn');
+
+                if (!isFloating && rect.top < -20) {
+                    syncWrapperSize();
+                    btn.classList.add('floating-back-btn');
+                    updateButtonPosition();
+                } else if (isFloating && rect.top >= 20) {
+                    btn.classList.remove('floating-back-btn');
+                    btn.style.left = '';
+                }
+            });
+        }
+    </script>
+
+    <style>
+        .floating-back-btn {
+            position: fixed;
+            top: 20px;
+            background-color: white;
+            color: black !important;
+            padding: 10px 20px;
+            border-radius: 9999px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateX(-20px);
+            animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            font-weight: 600;
+        }
+
+        .floating-back-btn:hover {
+            transform: translateX(-20px) scale(1.05);
+            background-color: #f0f0f0;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100px) translateX(-20px); opacity: 0; }
+            to { transform: translateY(0) translateX(-20px); opacity: 1; }
+        }
+
+        .animate-fade-in-opacity { animation: fade-in-opacity 1.5s ease-out forwards; }
+        @keyframes fade-in-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+        /* Estilos del Carrusel */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+
+    <script>
+        // Lógica del Carrusel Infinito Optimizada (Buffered)
+        const track = document.getElementById('carousel-track');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const indicators = document.querySelectorAll('.indicator');
+
+        const images = [
+            "/images/projects/ciscoPKT/Cisco_img1.png",
+            "/images/projects/ciscoPKT/Cisco_img2.png",
+            "/images/projects/ciscoPKT/Cisco_img3.png"
+        ];
+
+        const slideData = [
+            { src: images[1], type: 'clone' }, // Indice 0: Clon de Img2
+            { src: images[2], type: 'clone' }, // Indice 1: Clon de Img3
+            { src: images[0], type: 'real', realIndex: 0 }, // Indice 2: Start (Real 1)
+            { src: images[1], type: 'real', realIndex: 1 }, // Indice 3: Real 2
+            { src: images[2], type: 'real', realIndex: 2 }, // Indice 4: Real 3
+            { src: images[0], type: 'clone' }, // Indice 5: Clon de Img1
+            { src: images[1], type: 'clone' }  // Indice 6: Clon de Img2
+        ];
+
+        let currentIndex = 2; 
+        let isTransitioning = false;
+        const slideWidthPercent = 60; 
+
+        // Renderizado inicial
+        if (track) {
+            track.innerHTML = slideData.map((slide, i) => `
+                <div class="carousel-slide min-w-[60%] h-full px-1 transition-all duration-500 ease-out transform origin-center flex items-center justify-center relative" data-index="${i}">
+                    <div class="w-full h-full relative rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 slide-inner">
+                        <img src="${slide.src}" class="w-full h-full object-cover" alt="Slide" loading="${i >= 1 && i <= 5 ? 'eager' : 'lazy'}" />
+                        <div class="absolute inset-0 bg-black/60 transition-opacity duration-500 overlay"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        const slides = document.querySelectorAll('.carousel-slide');
+
+        const updateCarousel = (useTransition = true) => {
+            if (!track) return;
+
+            // Calculamos posición para centrar el slide actual
+            // (100% container - 60% slide) / 2 = 20% margen para centrar
+            const position = - (currentIndex * slideWidthPercent) + 20;
+
+            if (useTransition) {
+                track.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+            } else {
+                track.style.transition = 'none';
+            }
+            
+            track.style.transform = `translateX(${position}%)`;
+
+            // Efecto de profundidad (Foco)
+            slides.forEach((slide, i) => {
+                const overlay = slide.querySelector('.overlay');
+                
+                // Desactivar transiciones internas durante saltos instantáneos
+                if (!useTransition) {
+                    slide.style.transition = 'none';
+                    if (overlay) overlay.style.transition = 'none';
+                } else {
+                    slide.style.transition = '';
+                    if (overlay) overlay.style.transition = '';
+                }
+
+                if (i === currentIndex) {
+                    slide.style.transform = 'scale(1)';
+                    slide.style.zIndex = '10';
+                    slide.style.opacity = '1';
+                    if (overlay) overlay.style.opacity = '0'; 
+                } else {
+                    slide.style.transform = 'scale(0.85)';
+                    slide.style.zIndex = '5';
+                    slide.style.opacity = '0.6'; 
+                    if (overlay) overlay.style.opacity = '1'; 
+                }
+            });
+
+            // Forzar reflow para que el cambio de 'transition: none' aplique inmediatamente
+            if (!useTransition) {
+                track.offsetHeight; 
+            }
+
+            // Actualizar indicadores
+            // Fórmula ajustada para el offset de 2 clones iniciales: (index - 2 + 3) % 3
+            // Usamos Math.abs o lógica condicional para asegurar positivos
+            let realIndex = (currentIndex - 2) % 3;
+            if (realIndex < 0) realIndex += 3;
+
+            indicators.forEach((dot, i) => {
+                if (i === realIndex) {
+                    dot.classList.remove('bg-white/40', 'hover:bg-white/60');
+                    dot.classList.add('bg-white', 'scale-125');
+                } else {
+                    dot.classList.add('bg-white/40', 'hover:bg-white/60');
+                    dot.classList.remove('bg-white', 'scale-125');
+                }
+            });
+        };
+
+        const handleTransitionEnd = (e) => {
+            if (e.target !== track) return;
+            isTransitioning = false;
+            
+            // Lógica de Salto Infinito (Teleport)
+            // Si estamos en el primer clon del final (Indice 5, Clon Img1), saltamos al Real Img1 (Indice 2)
+            if (currentIndex === 5) {
+                currentIndex = 2;
+                requestAnimationFrame(() => updateCarousel(false));
+            }
+            // Si estamos en el último clon del inicio (Indice 1, Clon Img3), saltamos al Real Img3 (Indice 4)
+            else if (currentIndex === 1) {
+                currentIndex = 4;
+                requestAnimationFrame(() => updateCarousel(false));
+            }
+        };
+
+        if (track) {
+            track.addEventListener('transitionend', handleTransitionEnd);
+            
+            // Render inicial (sin transición)
+            updateCarousel(false);
+
+            nextBtn?.addEventListener('click', () => {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                currentIndex++;
+                updateCarousel(true);
+            });
+
+            prevBtn?.addEventListener('click', () => {
+                if (isTransitioning) return;
+                isTransitioning = true;
+                currentIndex--;
+                updateCarousel(true);
+            });
+        }
+
+    </script>
+</Layout>

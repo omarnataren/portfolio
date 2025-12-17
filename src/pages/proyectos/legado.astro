@@ -1,0 +1,243 @@
+---
+import Layout from '@layouts/Layout.astro';
+import SideNavbar from '@components/SideNavbar.astro';
+
+const project = {
+    title: "Legado",
+    subtitle: "Conectando viajeros con la raíz cultural.",
+    role: "Mobile Developer (Flutter) @ Teteocán Technologies",
+    timeline: "2024 - Presente",
+    tags: ["Flutter", "Firebase", "Google Maps API", "Clean Architecture"],
+    repoLink: "https://github.com/Teteocan/Legado"
+};
+---
+
+<Layout title={`${project.title} | Omar Nataren`}>
+    <main class="max-w-5xl mx-auto px-6 pt-12 pb-20">
+        
+        <!-- HEADER DEL PROYECTO -->
+        <header class="mb-16 relative">
+            <div class="flex flex-col md:flex-row md:items-center xl:block gap-6 mb-4 xl:mb-0">
+                <!-- Usamos una animación personalizada de solo opacidad para evitar crear un contexto de apilamiento (transform) que rompa el position: fixed del hijo -->
+                <div id="back-btn-wrapper" class="flex-shrink-0 xl:absolute xl:right-full xl:mr-8 xl:top-5 animate-fade-in-opacity" style="opacity: 0; animation-fill-mode: forwards;">
+                    <a id="back-btn" href="/#proyectos" class="text-secondary hover:text-white inline-flex items-center transition-all duration-300 text-sm md:text-base whitespace-nowrap">
+                        <i class="fas fa-arrow-left mr-2"></i> Volver al Portafolio
+                    </a>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white animated-item m-0">
+                    {project.title}
+                </h1>
+            </div>
+            <p class="text-2xl text-secondary font-light tracking-wide animated-item">
+                {project.subtitle}
+            </p>
+        </header>
+
+        <!-- IMAGEN HERO (Mockup Conceptual) -->
+        <!-- Tip: Usa una imagen oscura o un mockup del celular flotando -->
+        <div class="w-full h-[400px] md:h-[500px] bg-gradient-to-r from-[#ff416c] to-[#ff4b2b] rounded-2xl mb-16 shadow-2xl flex items-center justify-center animated-item" style="transition-delay: 0.2s;">
+            <div class="text-center text-white p-10 bg-black/20 backdrop-blur-sm rounded-xl border border-white/10">
+                <i class="fas fa-mobile-alt text-6xl mb-4"></i>
+                <p class="text-xl font-mono">App Preview / Mockup</p>
+            </div>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL (2 Columnas) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            
+            <!-- COLUMNA IZQUIERDA: Storytelling (El "Case Study") -->
+            <div class="lg:col-span-2 space-y-12 animated-item" style="transition-delay: 0.4s;">
+                
+                <!-- SECCIÓN 1: EL PROBLEMA/VISIÓN -->
+                <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-red-400">01.</span> La Visión
+                    </h2>
+                    <p class="text-lg text-secondary leading-relaxed text-justify">
+                        El turismo moderno a menudo roza la superficie, dejando a los viajeros como meros espectadores. En <strong>Teteocán Technologies</strong>, nos propusimos cambiar esto. <em>Legado</em> no es solo una app de reservas; es un puente digital diseñado para conectar a viajeros que buscan autenticidad con anfitriones locales que custodian tradiciones vivas. El objetivo era crear una plataforma que se sintiera tan humana como las experiencias que ofrece.
+                    </p>
+                </section>
+
+                <!-- SECCIÓN 2: EL RETO TÉCNICO -->
+                <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-red-400">02.</span> El Reto Técnico
+                    </h2>
+                    <p class="text-lg text-secondary leading-relaxed text-justify mb-4">
+                        Necesitábamos una experiencia fluida, visualmente inmersiva y disponible tanto en iOS como en Android desde el día uno. La latencia en la comunicación entre anfitrión y viajero debía ser nula para generar confianza.
+                    </p>
+                    <p class="text-lg text-secondary leading-relaxed text-justify">
+                        Opté por <strong>Flutter</strong> para garantizar una consistencia visual perfecta (pixel-perfect) en ambas plataformas. Para el backend, la velocidad de iteración era crítica, por lo que implementé una arquitectura serverless basada en <strong>Firebase</strong>, delegando la autenticación y la base de datos en tiempo real a Google Cloud para centrarnos en la lógica de negocio.
+                    </p>
+                </section>
+
+                <!-- SECCIÓN 3: LA SOLUCIÓN (Code deep dive) -->
+                <section>
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                        <span class="text-red-400">03.</span> Arquitectura & Ejecución
+                    </h2>
+                    <ul class="space-y-6 mt-6">
+                        <li class="bg-highlight p-6 rounded-xl border border-white/5">
+                            <h3 class="text-white font-bold text-lg mb-2">Clean Architecture</h3>
+                            <p class="text-secondary text-sm">
+                                Implementé una separación estricta de capas (Domain, Data, Presentation) en Flutter. Esto permite que la lógica de negocio (como el matching de experiencias) sea independiente de la UI, facilitando pruebas unitarias y escalabilidad futura.
+                            </p>
+                        </li>
+                        <li class="bg-highlight p-6 rounded-xl border border-white/5">
+                            <h3 class="text-white font-bold text-lg mb-2">Real-time Connection</h3>
+                            <p class="text-secondary text-sm">
+                                Uso de <strong>Firestore Streams</strong> para el chat en tiempo real y actualizaciones de estado de reservas. Integración con Google Maps API para geolocalización precisa de experiencias ocultas que no aparecen en guías turísticas.
+                            </p>
+                        </li>
+                    </ul>
+                </section>
+
+            </div>
+
+            <!-- COLUMNA DERECHA: Meta-información (Sticky) -->
+            <aside class="lg:col-span-1 animated-item" style="transition-delay: 0.6s;">
+                <div class="bg-highlight p-8 rounded-2xl border border-white/10 sticky top-24">
+                    
+                    <!-- Info Bloque 1 -->
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-white/50 tracking-widest uppercase mb-2">ROL & EMPRESA</h3>
+                        <p class="text-white text-lg font-medium">{project.role}</p>
+                        <p class="text-secondary text-sm mt-1">{project.timeline}</p>
+                    </div>
+
+                    <!-- Info Bloque 2: Stack -->
+                    <div class="mb-8">
+                        <h3 class="text-xs font-bold text-white/50 tracking-widest uppercase mb-4">TECH STACK</h3>
+                        <div class="flex flex-wrap gap-2">
+                            {project.tags.map((tag) => (
+                                <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-white">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <!-- CTA -->
+                    <a href={project.repoLink} target="_blank" class="block w-full py-4 bg-white text-black text-center font-bold hover:scale-105 transition-transform rounded-lg">
+                        VER CÓDIGO <i class="fab fa-github ml-2"></i>
+                    </a>
+
+                </div>
+            </aside>
+
+        </div>
+        
+        
+    </main>
+
+    <script>
+        const btn = document.getElementById('back-btn');
+        const wrapper = document.getElementById('back-btn-wrapper');
+
+        if (btn && wrapper) {
+            // Función para sincronizar el tamaño del wrapper con el botón
+            // Esto evita que el wrapper colapse (width=0) cuando el botón se vuelve fixed,
+            // lo cual arruinaría el cálculo de la posición 'left' cuando está anclado a la derecha (xl:right-full).
+            const syncWrapperSize = () => {
+                if (!btn.classList.contains('floating-back-btn')) {
+                    wrapper.style.width = `${btn.offsetWidth}px`;
+                    wrapper.style.height = `${btn.offsetHeight}px`;
+                }
+            };
+
+            // Función para actualizar la posición horizontal del botón flotante
+            const updateButtonPosition = () => {
+                // Siempre calculamos la posición basada en el wrapper (que ahora mantiene su tamaño/posición)
+                const leftPos = wrapper.getBoundingClientRect().left;
+                
+                if (btn.classList.contains('floating-back-btn')) {
+                    // Usamos la posición exacta del wrapper (sin offset manual)
+                    // El offset visual se maneja con transform en CSS para que la transición sea suave
+                    btn.style.left = `${leftPos}px`;
+                }
+            };
+
+            // Inicialización y eventos de redimensionamiento
+            window.addEventListener('resize', () => {
+                // Si no está flotando, actualizamos el tamaño del wrapper por si cambió el layout
+                if (!btn.classList.contains('floating-back-btn')) {
+                    syncWrapperSize();
+                }
+                // Si está flotando, actualizamos su posición
+                updateButtonPosition();
+            });
+            
+            // Inicializar tamaño
+            syncWrapperSize();
+
+            // Usamos scroll event para tener control preciso de los puntos de entrada y salida (histéresis)
+            window.addEventListener('scroll', () => {
+                const rect = wrapper.getBoundingClientRect();
+                const isFloating = btn.classList.contains('floating-back-btn');
+
+                // Lógica de Histéresis:
+                // 1. Para ACTIVAR (bajada):
+                //    Cambiamos el umbral a -20px para que aparezca "un poquito antes" (casi inmediatamente después de salir).
+                if (!isFloating && rect.top < -20) {
+                    // Antes de flotar, aseguramos que el wrapper tenga el tamaño correcto (por si acaso)
+                    syncWrapperSize();
+                    
+                    btn.classList.add('floating-back-btn');
+                    // Importante: Actualizar posición DESPUÉS de agregar la clase (o forzarlo)
+                    // Aquí llamamos a updateButtonPosition que leerá el wrapper (que mantiene su sitio) y posicionará el btn.
+                    updateButtonPosition();
+                } 
+                // 2. Para DESACTIVAR (subida):
+                else if (isFloating && rect.top >= 20) {
+                    btn.classList.remove('floating-back-btn');
+                    btn.style.left = ''; // Limpiamos estilo inline
+                    // Al volver, el wrapper ya tiene tamaño, así que el botón encaja perfecto.
+                }
+            });
+        }
+    </script>
+
+    <style>
+        .floating-back-btn {
+            position: fixed;
+            top: 20px;
+            /* left: se calcula por JS */
+            background-color: white;
+            color: black !important; /* Forzamos color negro */
+            padding: 10px 20px;
+            border-radius: 9999px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            /* Agregamos el offset X aquí con transform para que la transición al quitar la clase sea suave */
+            transform: translateX(-20px);
+            animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            font-weight: 600;
+        }
+
+        .floating-back-btn:hover {
+            /* Mantenemos el offset X y agregamos escala */
+            transform: translateX(-20px) scale(1.05);
+            background-color: #f0f0f0;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px) translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) translateX(-20px);
+                opacity: 1;
+            }
+        }
+
+        /* Animación de entrada solo opacidad para el wrapper */
+        .animate-fade-in-opacity {
+            animation: fade-in-opacity 1.5s ease-out forwards;
+        }
+        @keyframes fade-in-opacity {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</Layout>

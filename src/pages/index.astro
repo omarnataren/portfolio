@@ -1,16 +1,48 @@
 ---
-
+import AboutMe from '@components/AboutMe.astro';
+import Contacto from '@components/Contacto.astro';
+import Layout from '../layouts/Layout.astro';
+import Particles from '@components/Particles.astro';
+import SideNavbar from '@components/SideNavbar.astro';
+import Stack from '@components/Stack.astro';
+import Proyects from '@components/Proyects.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Omar Nataren | Software Engineer" withSidebar={true} enableExitAnimations={true}>
+    
+    <SideNavbar />
+
+    <main class="max-w-6xl mx-auto px-6 pb-12">
+        <Particles />
+        <section id="inicio" class=" relative min-h-screen flex flex-col justify-center items-start border-b border-black overflow-hidden">
+			
+			<div class="relative z-10">
+				<h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 animated-item">
+					OMAR NATAREN
+				</h1>
+				<h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest animated-item" style="transition-delay: 0.5s;">
+					// INGENIERO DE SOFTWARE - ESPECIALIZADO EN ARQUITECTURA DE SISTEMAS ESCALABLES Y DISEÑO UI/UX
+				</h3>
+				<div id="hero-buttons" class="flex gap-4 animated-item" style="transition-delay: 1s;">
+					<a href="#proyectos" name="proyectos" class="text-xl text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300">
+						[ EXPLORAR TRABAJO ]
+					</a>
+					<a href="https://github.com/omarnataren" aria-label="Go to Github" target="_blank" class="text-lg text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300">
+						<i class="fab fa-github"></i>
+					</a>
+					<a href="https://www.linkedin.com/in/omar-nataren-arredondo-189531370/" aria-label="Go to LinkedIn" target="_blank" class="text-lg text-white/80 border border-white/50 py-3 px-6 hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition duration-300">
+						<i class="fab fa-linkedin"></i>
+					</a>
+				</div>
+			</div>
+        </section>
+
+        <Proyects />
+
+        <AboutMe />
+
+        <Stack />
+
+        <Contacto />
+    </main>
+</Layout>
