@@ -58,7 +58,11 @@ body {
 }
 
 p, span {
-    font-family: var(--font-montserrat);
+  font-family: var(--font-montserrat);
+}
+
+a span {
+  font-family: var(--font-code-mono);
 }
 
 @media (min-width: 768px) {
