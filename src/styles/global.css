@@ -48,6 +48,7 @@
 /* 3. Estilos globales extra */
 html {
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
 }
 
 body {
