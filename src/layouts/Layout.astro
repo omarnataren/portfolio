@@ -20,6 +20,11 @@ const { title, withSidebar = false, enableExitAnimations = false } = Astro.props
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		
+        <!-- Cache Control para evitar problemas de carga en desarrollo -->
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         
 		<title>{title}</title>
@@ -31,6 +36,15 @@ const { title, withSidebar = false, enableExitAnimations = false } = Astro.props
 		<slot />
         
         <script>
+            // Limpieza de Service Workers antiguos que puedan causar problemas de caché/red
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+
             // Forzar scroll al inicio al recargar
             if (history.scrollRestoration) {
                 history.scrollRestoration = 'manual';

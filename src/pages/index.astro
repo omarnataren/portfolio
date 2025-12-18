@@ -1,7 +1,7 @@
 ---
 import AboutMe from '@components/AboutMe.astro';
 import Contacto from '@components/Contacto.astro';
-import Layout from '@layouts/Layout.astro';
+import Layout from '../layouts/Layout.astro';
 import Particles from '@components/Particles.astro'; 
 import SideNavbar from '@components/SideNavbar.astro';
 import Stack from '@components/Stack.astro';
@@ -9,21 +9,16 @@ import Proyects from '@components/Proyects.astro';
 ---
 
 <Layout title="Omar Nataren | Software Engineer" withSidebar={true} enableExitAnimations={true}>
-    
     <SideNavbar />
-
-    <main class="max-w-5xl mx-auto px-6 pb-12">
-        
-        <!-- Renderizamos las partículas -->
+    <main class="w-full">
         <Particles />
-        
-        <section id="inicio" class="relative min-h-screen w-full mb-6 md:mb-0 flex flex-col justify-center items-center md:items-start border-b border-white/10 overflow-hidden">
+        <section id="inicio" class="relative min-h-screen w-full mb-6 md:mb-0 flex flex-col justify-center items-center border-b border-white/10 overflow-hidden">
             
-            <div class="relative z-10 w-full max-w-5xl">
-                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 md:text-left">
+            <div class="relative z-10 w-full max-w-5xl px-6 cursor-default">
+                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 text-center md:text-left">
                     OMAR NATAREN
                 </h1>
-                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest md:text-left">
+                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest text-center md:text-left">
                     // INGENIERO DE SOFTWARE - ESPECIALIZADO EN ARQUITECTURA DE SISTEMAS ESCALABLES Y DISEÑO UI/UX
                 </h3>
                 <div id="hero-buttons" class="flex flex-wrap justify-center md:justify-start gap-4">
@@ -41,57 +36,71 @@ import Proyects from '@components/Proyects.astro';
             
             <div class="absolute bottom-0 left-0 w-full h-32 bg-linear-to-t from-dark-bg to-transparent z-0 pointer-events-none"></div>
 
-            <!-- Scroll Down Arrow with Rotating Circle -->
-            <button id="scroll-down-btn" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer group flex items-center justify-center w-16 h-16" aria-label="Scroll down">
-                <!-- Rotating Circle -->
-                <div class="absolute inset-1 border-dashed border-2 border-white/60 rounded-full animate-[spin_10s_linear_infinite] group-hover:border-white transition-colors"></div>
-                
-                <i class="fas fa-arrow-down text-xl text-white/60 group-hover:text-white transition-colors"></i>
+            <!-- Scroll Down Indicator (Digital Drop) -->
+            <button id="scroll-down-btn" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer group flex flex-col items-center gap-3 mix-blend-difference" aria-label="Scroll down">
+                <span class="text-[10px] font-mono tracking-[0.4em] text-white/40 group-hover:text-white transition-colors duration-500">SCROLL</span>
+                <div class="relative w-px h-16 bg-white/10 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-[50%] bg-linear-to-b from-transparent via-white to-transparent animate-drop"></div>
+                </div>
             </button>
 
         </section>
 
-        <Proyects />
+        <div class="max-w-5xl mx-auto px-6 pb-12">
+            <Proyects />
 
-        <AboutMe />
+            <AboutMe />
 
-        <Stack />
+            <Stack />
 
-        <Contacto />
+            <Contacto />
+        </div>
     </main>
 
     <script>
         let isNavigating = false;
         let initialHashLoad = false;
 
-        // 1. Lógica de Inicialización: Verificar si venimos con un ancla (ej: #proyectos)
+        // 1. Lógica de Inicialización: Verificar si venimos con un ancla
         const checkInitialScroll = () => {
-            // Si hay hash en la URL (ej: #proyectos) y no es #inicio, permitimos el scroll
             if (window.location.hash && window.location.hash !== '#inicio') {
                 document.body.style.overflow = 'auto';
+                document.documentElement.style.overflow = 'auto';
                 initialHashLoad = true;
-                // Damos un margen de tiempo para que el navegador restaure la posición del scroll sin que el bloqueo lo intercepte
                 setTimeout(() => {
                     initialHashLoad = false;
                 }, 1500);
             } else {
-                // Si estamos en el root puro, bloqueamos el scroll (Game Mode)
+                // Bloqueamos el scroll al inicio para permitir interacción con partículas
+                // Importante: Bloquear tanto body como html para soporte móvil completo
                 document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
+                
+                // Aseguramos que estemos arriba
+                if ('scrollRestoration' in history) {
+                    history.scrollRestoration = 'manual';
+                }
+                
+                // Forzamos el scroll arriba inmediatamente y después de un pequeño tick
+                // para combatir el comportamiento de algunos navegadores móviles
                 window.scrollTo(0, 0);
+                setTimeout(() => window.scrollTo(0, 0), 10);
             }
         };
         
-        // Ejecutar inmediatamente al cargar
         checkInitialScroll();
 
-        const unlockAndScroll = (targetId) => {
+        const unlockAndScroll = (targetId: string) => {
             isNavigating = true;
+            
+            // Desbloqueamos todo
             document.body.style.overflow = 'auto'; 
+            document.documentElement.style.overflow = 'auto';
+            
             const target = document.getElementById(targetId);
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth' });
-                // Actualizar URL para mantener estado
-                history.pushState(null, null, `#${targetId}`);
+                history.pushState(null,'', `#${targetId}`);
             }
             
             setTimeout(() => {
@@ -99,35 +108,33 @@ import Proyects from '@components/Proyects.astro';
             }, 1000);
         };
 
-        // Detectar cuando el usuario regresa al inicio para volver a bloquear
+        // Detectar scroll para re-bloquear (AHORA EN TODOS LOS DISPOSITIVOS)
         window.addEventListener('scroll', () => {
-            // Si estamos en el proceso de carga inicial con hash, no bloqueamos nada
             if (initialHashLoad) return;
 
-            // Aumentamos el umbral a 20px para móviles para evitar "rebotes" falsos
+            // Eliminamos la restricción de ancho para que funcione también en móvil
+            // Lógica Universal: Re-activa el modo inmersivo si subimos al tope
             if (!isNavigating && window.scrollY < 20) {
                 document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
                 window.scrollTo(0, 0); 
                 
-                // Limpiamos el hash si volvemos al inicio
                 if (window.location.hash) {
-                    history.replaceState(null, null, ' ');
+                    history.replaceState(null, ' ');
                 }
             }
         });
 
-        // Botón de flecha inferior
+        // Event Listeners
         document.getElementById('scroll-down-btn')?.addEventListener('click', () => {
             unlockAndScroll('proyectos');
         });
 
-        // Botón principal "EXPLORAR TRABAJO"
         document.querySelector('a[name="proyectos"]')?.addEventListener('click', (e) => {
             e.preventDefault();
             unlockAndScroll('proyectos');
         });
 
-        // Manejo de clicks en el Navbar lateral para desbloquear el scroll
         document.querySelectorAll('.side-nav-item').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -140,4 +147,14 @@ import Proyects from '@components/Proyects.astro';
         });
     </script>
 
+    <style>
+        @keyframes drop {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(250%); opacity: 0; }
+        }
+        .animate-drop {
+            animation: drop 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+        }
+    </style>
 </Layout>

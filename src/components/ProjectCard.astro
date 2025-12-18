@@ -8,8 +8,8 @@ interface Props {
     link?: string;
     gradientFrom?: string;
     gradientTo?: string;
-    pageLink?: string;
-    image?: ImageMetadata | string;
+    pageLink: string;
+    image?: string ;
 }
 
 const { 
@@ -33,18 +33,20 @@ const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}
     <!-- Imagen superpuesta (opcional) -->
     {image && (
         <div class="project-overlay-image">
-            {typeof image === 'string' ? (
-                <img src={image} alt={title} class="w-full h-full object-cover" />
-            ) : (
-                <Image src={image} alt={title} class="w-full h-full object-cover" />
-            )}
+            <Image 
+                src={image} 
+                alt={title} 
+                class="w-full h-full object-cover" 
+                width={800}
+                height={600}
+            />
         </div>
     )}
 
     <!-- Dark Gradient Overlay for Readability (Top-Left to Bottom-Right) -->
-    <div class="absolute inset-0 bg-gradient-to-br from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 z-5 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-linear-to-br from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 z-5 pointer-events-none"></div>
 
-    <div class="project-content p-6 h-full flex flex-col justify-between relative z-10">
+    <div class="project-content p-6 h-full flex flex-col justify-between relative z-10 cursor-default">
         <div class="project-header transition-transform duration-300 group-hover:translate-y-4">
             <span class="text-xs text-secondary font-bold tracking-wider uppercase">[{tech}]</span>
             <h3 class="text-2xl font-bold mt-2 text-white">{title}</h3>
