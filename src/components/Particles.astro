@@ -6,6 +6,7 @@
     const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
     const ctx = canvas.getContext('2d');
     
+    let isAnimating = true;
     let particlesArray: Particle[] = [];
     let hue = 0; 
 
@@ -20,6 +21,15 @@
 
     // Función unificada para manejar la entrada (Mouse o Touch)
     function handleMovement(x: number, y: number) {
+        if (!isAnimating) return;
+
+        // Si el mouse sale del canvas, reseteamos para evitar saltos al volver a entrar
+        if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) {
+            lastMouse.x = undefined;
+            lastMouse.y = undefined;
+            return;
+        }
+
         // Si es la primera vez que se mueve/toca, solo guardamos posición y salimos
         if (lastMouse.x === undefined || lastMouse.y === undefined) {
             lastMouse.x = x;
@@ -166,12 +176,13 @@
     }
     
     // Observer para pausar si no se ve (ahorra batería)
-    let isAnimating = true;
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 if (!isAnimating) {
                     isAnimating = true;
+                    lastMouse.x = undefined;
+                    lastMouse.y = undefined;
                     animate();
                 }
             } else {
