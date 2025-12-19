@@ -1,4 +1,4 @@
-<div id="particles-container" class="absolute inset-0 z-0 overflow-hidden touch-none">
+<div id="particles-container" class="absolute inset-0 z-0 overflow-hidden touch-none pointer-events-none">
     <canvas id="hero-canvas"></canvas>
 </div>
 
@@ -58,21 +58,23 @@
         handleMovement(event.clientX - rect.left, event.clientY - rect.top);
     });
 
-    // Eventos TÁCTILES (Móvil)
+    // Eventos TÁCTILES (Móvil) - Usamos passive: false para evitar conflictos con scroll si fuera necesario, 
+    // pero aquí queremos que el scroll funcione, así que solo detectamos movimiento.
+    
     // touchstart: Reinicia la posición inicial para evitar "saltos" desde la última posición del mouse
     window.addEventListener('touchstart', function(event) {
         const rect = canvas.getBoundingClientRect();
         const touch = event.touches[0];
         lastMouse.x = touch.clientX - rect.left;
         lastMouse.y = touch.clientY - rect.top;
-    });
+    }, { passive: true });
 
     // touchmove: Genera partículas mientras arrastras el dedo
     window.addEventListener('touchmove', function(event) {
         const rect = canvas.getBoundingClientRect();
         const touch = event.touches[0];
         handleMovement(touch.clientX - rect.left, touch.clientY - rect.top);
-    });
+    }, { passive: true });
 
     // touchend: Limpia la posición para que el próximo toque empiece fresco
     window.addEventListener('touchend', function() {

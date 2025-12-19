@@ -1,7 +1,7 @@
 ---
 import AboutMe from '@components/AboutMe.astro';
 import Contacto from '@components/Contacto.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from '@layouts/Layout.astro';
 import Particles from '@components/Particles.astro'; 
 import SideNavbar from '@components/SideNavbar.astro';
 import Stack from '@components/Stack.astro';
@@ -9,19 +9,19 @@ import Proyects from '@components/Proyects.astro';
 ---
 
 <Layout title="Omar Nataren | Software Engineer" withSidebar={true} enableExitAnimations={true}>
-    <SideNavbar />
+    <SideNavbar class="hidden-on-home" />
     <main class="w-full">
         <Particles />
-        <section id="inicio" class="relative min-h-screen w-full mb-6 md:mb-0 flex flex-col justify-center items-center border-b border-white/10 overflow-hidden">
+        <section id="inicio" class="relative min-h-screen w-full flex flex-col justify-center items-start border-b border-white/10 overflow-hidden">
             
-            <div class="relative z-10 w-full max-w-5xl px-6 cursor-default">
-                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 text-center md:text-left">
+            <div class="relative lg:mx-30 z-10 w-full max-w-5xl px-6">
+                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 text-left">
                     OMAR NATAREN
                 </h1>
-                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest text-center md:text-left">
+                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest text-left">
                     // INGENIERO DE SOFTWARE - ESPECIALIZADO EN ARQUITECTURA DE SISTEMAS ESCALABLES Y DISEÑO UI/UX
                 </h3>
-                <div id="hero-buttons" class="flex flex-wrap justify-center md:justify-start gap-4">
+                <div id="hero-buttons" class="flex flex-wrap justify-start gap-4">
                     <a href="#proyectos" name="proyectos" class="md:text-xl text-md text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300 flex items-center justify-center">
                         [ EXPLORAR TRABAJO ]
                     </a>
@@ -38,7 +38,7 @@ import Proyects from '@components/Proyects.astro';
 
             <!-- Scroll Down Indicator (Digital Drop) -->
             <button id="scroll-down-btn" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer group flex flex-col items-center gap-3 mix-blend-difference" aria-label="Scroll down">
-                <span class="text-[10px] font-mono tracking-[0.4em] text-white/40 group-hover:text-white transition-colors duration-500">SCROLL</span>
+                <span class="text-[10px] font-mono tracking-[0.4em] text-white/40 group-hover:text-white transition-colors duration-500">HAZ CLICK</span>
                 <div class="relative w-px h-16 bg-white/10 overflow-hidden">
                     <div class="absolute top-0 left-0 w-full h-[50%] bg-linear-to-b from-transparent via-white to-transparent animate-drop"></div>
                 </div>
@@ -57,7 +57,18 @@ import Proyects from '@components/Proyects.astro';
         </div>
     </main>
 
-    <script>
+    <script is:inline>
+        // Bloqueo inmediato del scroll si estamos en inicio (sin hash)
+        if (!window.location.hash || window.location.hash === '#inicio') {
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+            
+            if ('scrollRestoration' in history) {
+                history.scrollRestoration = 'manual';
+            }
+            window.scrollTo(0, 0);
+        }
+
         let isNavigating = false;
         let initialHashLoad = false;
 
@@ -70,27 +81,14 @@ import Proyects from '@components/Proyects.astro';
                 setTimeout(() => {
                     initialHashLoad = false;
                 }, 1500);
-            } else {
-                // Bloqueamos el scroll al inicio para permitir interacción con partículas
-                // Importante: Bloquear tanto body como html para soporte móvil completo
-                document.body.style.overflow = 'hidden';
-                document.documentElement.style.overflow = 'hidden';
-                
-                // Aseguramos que estemos arriba
-                if ('scrollRestoration' in history) {
-                    history.scrollRestoration = 'manual';
-                }
-                
-                // Forzamos el scroll arriba inmediatamente y después de un pequeño tick
-                // para combatir el comportamiento de algunos navegadores móviles
-                window.scrollTo(0, 0);
-                setTimeout(() => window.scrollTo(0, 0), 10);
             }
+            // El else ya está cubierto por el bloqueo inmediato
         };
         
+        // Ejecutar check por si acaso (aunque el inline ya cubrió el caso base)
         checkInitialScroll();
 
-        const unlockAndScroll = (targetId: string) => {
+        const unlockAndScroll = (targetId) => {
             isNavigating = true;
             
             // Desbloqueamos todo
@@ -145,6 +143,27 @@ import Proyects from '@components/Proyects.astro';
                 }
             });
         });
+
+        // Lógica para ocultar el Navbar en la sección de inicio
+        const navbarObserver = new IntersectionObserver((entries) => {
+            const nav = document.querySelector('.nav-capsule');
+            if (!nav) return;
+
+            entries.forEach(entry => {
+                // Si la sección de inicio es visible (aunque sea un poco), ocultamos el navbar
+                // Usamos un umbral alto (0.9) para que solo aparezca cuando ya casi salimos de inicio
+                if (entry.isIntersecting) {
+                    nav.classList.add('hidden-on-home');
+                } else {
+                    nav.classList.remove('hidden-on-home');
+                }
+            });
+        }, { threshold: 0.45 });
+
+        const inicioSection = document.getElementById('inicio');
+        if (inicioSection) {
+            navbarObserver.observe(inicioSection);
+        }
     </script>
 
     <style>

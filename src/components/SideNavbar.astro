@@ -1,5 +1,8 @@
+---
+const { class: className } = Astro.props;
+---
 
-<nav class="nav-capsule hidden md:flex">
+<nav class:list={["nav-capsule hidden md:flex", className]}>
     <a href="#inicio" aria-label="Inicio" class="side-nav-item group">
         <i class="fas fa-home text-lg"></i>
         <span class="nav-label">Inicio</span>
@@ -25,7 +28,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const nav = document.querySelector('.nav-capsule');
         
-        // Detectar clicks en enlaces que llevan a otras páginas
+        // Detectar clicks en enlaces que llevan a otras páginas para animar salida
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
@@ -34,13 +37,13 @@
                 // Si es un enlace interno (anchor) o abre en nueva pestaña, ignorar
                 if (!href || href.startsWith('#') || target === '_blank') return;
                 
-                // Si es navegación a otra página interna
+                // Si es navegación a otra página interna (ej: /proyectos/cisco)
                 e.preventDefault();
                 nav?.classList.add('slide-out');
                 
                 setTimeout(() => {
                     window.location.href = href;
-                }, 400); // Tiempo de la animación
+                }, 400); 
             });
         });
     });
@@ -52,8 +55,8 @@
         position: fixed;
         top: 50%;
         left: 40px;
-        /* Estado inicial para la animación de entrada */
-        transform: translateY(-50%) translateX(-100px);
+        /* Estado inicial: Oculto a la izquierda */
+        transform: translateY(-50%) translateX(-150px);
         opacity: 0;
         
         background-color: rgba(26, 26, 26, 0.8);
@@ -66,14 +69,21 @@
         z-index: 50;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         
-        /* Animación de entrada */
+        /* Animación de entrada por defecto (cuando cargamos en cualquier pág) */
         animation: nav-slide-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        animation-delay: 0.5s;
+        animation-delay: 0.5s; /* Esperamos un poco a que cargue la pág */
     }
 
-    /* Animación de salida */
+    /* Animación de salida (Navegación) */
     .nav-capsule.slide-out {
-        animation: nav-slide-out 0.4s ease-in forwards;
+        animation: nav-slide-out 0.3s ease-in forwards;
+    }
+
+    /* CLASE CORREGIDA: Ocultar en el Home */
+    /* Quitamos el background red y ajustamos la animación */
+    :global(.nav-capsule.hidden-on-home) {
+        animation: nav-slide-out 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+        pointer-events: none; /* Evitar clicks mientras no se ve */
     }
 
     @keyframes nav-slide-in {
@@ -84,9 +94,13 @@
     }
 
     @keyframes nav-slide-out {
+        from {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
         to {
             opacity: 0;
-            transform: translateY(-50%) translateX(-100px);
+            transform: translateY(-50%) translateX(-150px);
         }
     }
 
