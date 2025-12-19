@@ -7,7 +7,7 @@ const { images } = Astro.props;
 const carouselId = `carousel-${Math.random().toString(36).substr(2, 9)}`;
 ---
 
-<div id={carouselId} class="relative w-full h-[300px] md:h-[400px] overflow-hidden group mb-16 shadow-2xl">
+<div id={carouselId} class="relative w-full h-[250px] md:h-[400px] overflow-hidden group mb-16 shadow-2xl">
     
     <!-- Gradients -->
     <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-linear-to-r from-dark-bg to-transparent z-10 pointer-events-none"></div>
@@ -36,6 +36,14 @@ const carouselId = `carousel-${Math.random().toString(36).substr(2, 9)}`;
 
 </div>
 
+<!-- Lightbox Modal -->
+<div id={`lightbox-${carouselId}`} class="fixed inset-0 z-[100] bg-black/95 hidden flex items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-sm">
+    <button class="lightbox-close absolute top-5 right-5 text-white/70 hover:text-white text-4xl z-[110] cursor-pointer transition-colors">
+        <i class="fas fa-times"></i>
+    </button>
+    <img src="" alt="Full view" class="lightbox-img max-w-[90vw] max-h-[90vh] object-contain shadow-2xl scale-95 transition-transform duration-300 rounded-lg" />
+</div>
+
 <script define:vars={{ images, carouselId }}>
     (function() {
         const container = document.getElementById(carouselId);
@@ -45,6 +53,11 @@ const carouselId = `carousel-${Math.random().toString(36).substr(2, 9)}`;
         const prevBtn = container.querySelector('.prev-btn');
         const nextBtn = container.querySelector('.next-btn');
         const indicators = container.querySelectorAll('.indicator');
+        
+        // Lightbox Elements
+        const lightbox = document.getElementById(`lightbox-${carouselId}`);
+        const lightboxImg = lightbox?.querySelector('.lightbox-img');
+        const lightboxClose = lightbox?.querySelector('.lightbox-close');
 
         if (!track || images.length === 0) return;
 
@@ -209,6 +222,64 @@ const carouselId = `carousel-${Math.random().toString(36).substr(2, 9)}`;
             currentIndex++;
             updateCarousel(true);
         });
+
+        // Lightbox Logic
+        if (lightbox && lightboxImg && lightboxClose) {
+            const openLightbox = (src) => {
+                lightboxImg.src = src;
+                lightbox.classList.remove('hidden');
+                // Small delay to allow display:block to apply before opacity transition
+                requestAnimationFrame(() => {
+                    lightbox.classList.remove('opacity-0');
+                    lightboxImg.classList.remove('scale-95');
+                    lightboxImg.classList.add('scale-100');
+                });
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            };
+
+            const closeLightbox = () => {
+                lightbox.classList.add('opacity-0');
+                lightboxImg.classList.remove('scale-100');
+                lightboxImg.classList.add('scale-95');
+                setTimeout(() => {
+                    lightbox.classList.add('hidden');
+                    lightboxImg.src = '';
+                }, 300); // Match transition duration
+                document.body.style.overflow = '';
+            };
+
+            // Event Delegation for Slides
+            track.addEventListener('click', (e) => {
+                // Find closest slide
+                const slide = e.target.closest('.carousel-slide');
+                if (!slide) return;
+                
+                // Check if we are dragging (simple check: if isTransitioning, maybe don't open? 
+                // Or if mouse moved? For now, simple click is fine)
+                if (isTransitioning) return;
+
+                const img = slide.querySelector('img');
+                if (img) {
+                    openLightbox(img.src);
+                }
+            });
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            
+            // Close on background click
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                    closeLightbox();
+                }
+            });
+        }
 
     })();
 </script>
