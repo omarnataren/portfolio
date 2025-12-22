@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import Footer from '@components/Footer.astro';
-
+import Analytics from '@vercel/analytics/astro'
 interface Props {
 	title: string;
     withSidebar?: boolean;
@@ -137,6 +137,7 @@ const { title, withSidebar = false, enableExitAnimations = false } = Astro.props
             });
         </script>
         <Footer />
+        <Analytics/>
 	</body>
 </html>
 
