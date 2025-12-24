@@ -12,7 +12,10 @@ const project = {
     role: "Mobile Developer (Flutter) @ Teteocán Technologies",
     timeline: "2024 - Presente",
     tags: ["Flutter", "Firebase", "Google Maps API", "Clean Architecture"],
-    repoLink: "https://github.com/Teteocan/Legado",
+    otherLink:{
+        href: "https://teteocan.github.io/Legado_LandingPage/",
+        label: "Landing Page"
+    },
     images: [
         "/images/projects/Legado/Legado_img1.png",
         "/images/projects/Legado/Legado_img2.png",
@@ -26,7 +29,6 @@ const project = {
 
     <main class="max-w-5xl mx-auto px-6 pt-12 pb-20">
         
-        <!-- HEADER DEL PROYECTO -->
         <header class="mb-16 relative">
             <div class="flex flex-col md:flex-row md:items-center xl:block gap-6 mb-4 xl:mb-0">
                 <BackButton />
@@ -114,7 +116,7 @@ const project = {
                 role={project.role}
                 timeline={project.timeline}
                 tags={project.tags}
-                repoLink={project.repoLink}
+                otherLink={project.otherLink}
             />
 
         </div>

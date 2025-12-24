@@ -9,19 +9,24 @@ import Proyects from '@components/Proyects.astro';
 ---
 
 <Layout title="Omar Nataren | Software Engineer" withSidebar={true} enableExitAnimations={true}>
-    <SideNavbar class="hidden-on-home" />
-    <main class="w-full">
+    
+    <SideNavbar />
+
+    <main class="max-w-5xl mx-auto px-6 pb-12">
         
-        <section id="inicio" class="relative min-h-screen w-full flex flex-col justify-center items-start border-b border-white/10 overflow-hidden">
-        <Particles />    
-            <div class="relative lg:mx-30 z-10 w-full max-w-5xl px-6 cursor-default">
-                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 text-left">
+        <!-- Renderizamos las partículas -->
+        <Particles />
+        
+        <section id="inicio" class="pb-15 md:pb-0 relative min-h-screen w-full mb-6 md:mb-0 flex flex-col justify-center items-center md:items-start border-b border-white/10 overflow-hidden">
+            
+            <div class="relative z-10 w-full max-w-5xl">
+                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 md:text-left">
                     OMAR NATAREN
                 </h1>
-                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest text-left">
+                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest md:text-left">
                     // INGENIERO DE SOFTWARE - ESPECIALIZADO EN ARQUITECTURA DE SISTEMAS ESCALABLES Y DISEÑO UI/UX
                 </h3>
-                <div id="hero-buttons" class="flex flex-wrap justify-start gap-4">
+                <div id="hero-buttons" class="flex flex-wrap justify-center md:justify-start gap-4">
                     <a href="#proyectos" name="proyectos" class="md:text-xl text-md text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300 flex items-center justify-center">
                         [ EXPLORAR TRABAJO ]
                     </a>
@@ -35,31 +40,37 @@ import Proyects from '@components/Proyects.astro';
             </div>
             
             <div class="absolute bottom-0 left-0 w-full h-32 bg-linear-to-t from-dark-bg to-transparent z-0 pointer-events-none"></div>
-
-            <!-- Scroll Down Indicator (Digital Drop) -->
-            <button id="scroll-down-btn" class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer group flex flex-col items-center gap-3 mix-blend-difference" aria-label="Scroll down">
-                <span class="text-[10px] font-mono font-bold tracking-[0.4em] text-white/60 group-hover:text-white transition-colors duration-500">HAZ CLICK</span>
-                <div class="relative w-0.5 h-16 bg-white/10 overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-[50%] bg-linear-to-b from-transparent via-white to-transparent animate-drop"></div>
-                </div>
+            <p class="md:hidden absolute bottom-42 left-1/2 transform -translate-x-1/2 text-sm text-white/80 tracking-widest">
+                    Haz click para scrollear
+            </p>
+            <!-- Scroll Down Arrow (SOLO VISIBLE EN MÓVIL: md:hidden) -->
+            <button id="scroll-down-btn" class="md:hidden absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer group flex items-center justify-center w-16 h-16" aria-label="Scroll down">
+                <!-- Círculo punteado rotando (animate-spin es nativo de Tailwind, lo hacemos más lento con duración custom si quieres, o default) -->
+                <!-- Usamos animate-[spin_10s_linear_infinite] para una rotación lenta y elegante -->
+                
+                <div class="absolute inset-0 border-dashed border-2 border-white/40 rounded-full animate-[spin_8s_linear_infinite]"></div>
+                
+                <!-- Flecha estática -->
+                <i class="fas fa-arrow-down text-xl text-white/80"></i>
             </button>
 
         </section>
 
-        <div class="max-w-5xl mx-auto px-6 pb-12">
-            <Proyects />
+        <Proyects />
 
-            <AboutMe />
+        <AboutMe />
 
-            <Stack />
+        <Stack />
 
-            <Contacto />
-        </div>
+        <Contacto />
     </main>
 
     <script is:inline>
-        // Bloqueo inmediato del scroll si estamos en inicio (sin hash)
-        if (!window.location.hash || window.location.hash === '#inicio') {
+        // Función para detectar si es móvil (coincide con el md:hidden de Tailwind que es 768px)
+        const isMobile = () => window.innerWidth < 768;
+
+        // Bloqueo inmediato del scroll SOLO si es móvil y estamos en inicio
+        if (isMobile() && (!window.location.hash || window.location.hash === '#inicio')) {
             document.body.style.overflow = 'hidden';
             document.documentElement.style.overflow = 'hidden';
             
@@ -72,20 +83,22 @@ import Proyects from '@components/Proyects.astro';
         let isNavigating = false;
         let initialHashLoad = false;
 
-        // 1. Lógica de Inicialización: Verificar si venimos con un ancla
+        // 1. Lógica de Inicialización
         const checkInitialScroll = () => {
-            if (window.location.hash && window.location.hash !== '#inicio') {
+            // Si hay hash, o si NO es móvil, aseguramos scroll libre
+            if ((window.location.hash && window.location.hash !== '#inicio') || !isMobile()) {
                 document.body.style.overflow = 'auto';
                 document.documentElement.style.overflow = 'auto';
-                initialHashLoad = true;
-                setTimeout(() => {
-                    initialHashLoad = false;
-                }, 1500);
+                
+                if (window.location.hash && window.location.hash !== '#inicio') {
+                    initialHashLoad = true;
+                    setTimeout(() => {
+                        initialHashLoad = false;
+                    }, 1500);
+                }
             }
-            // El else ya está cubierto por el bloqueo inmediato
         };
         
-        // Ejecutar check por si acaso (aunque el inline ya cubrió el caso base)
         checkInitialScroll();
 
         const unlockAndScroll = (targetId) => {
@@ -98,7 +111,7 @@ import Proyects from '@components/Proyects.astro';
             const target = document.getElementById(targetId);
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth' });
-                history.pushState(null,'', `#${targetId}`);
+                history.pushState(null, '', `#${targetId}`);
             }
             
             setTimeout(() => {
@@ -106,19 +119,21 @@ import Proyects from '@components/Proyects.astro';
             }, 1000);
         };
 
-        // Detectar scroll para re-bloquear (AHORA EN TODOS LOS DISPOSITIVOS)
+        // Detectar scroll para re-bloquear (SOLO EN MÓVIL)
         window.addEventListener('scroll', () => {
             if (initialHashLoad) return;
+            
+            // Si no es móvil, no hacemos nada de bloqueo
+            if (!isMobile()) return;
 
-            // Eliminamos la restricción de ancho para que funcione también en móvil
-            // Lógica Universal: Re-activa el modo inmersivo si subimos al tope
+            // Lógica Móvil: Re-activa el modo inmersivo si subimos al tope
             if (!isNavigating && window.scrollY < 20) {
                 document.body.style.overflow = 'hidden';
                 document.documentElement.style.overflow = 'hidden';
                 window.scrollTo(0, 0); 
                 
                 if (window.location.hash) {
-                    history.replaceState(null, ' ');
+                    history.replaceState(null, '', ' ');
                 }
             }
         });
@@ -150,8 +165,6 @@ import Proyects from '@components/Proyects.astro';
             if (!nav) return;
 
             entries.forEach(entry => {
-                // Si la sección de inicio es visible (aunque sea un poco), ocultamos el navbar
-                // Usamos un umbral alto (0.9) para que solo aparezca cuando ya casi salimos de inicio
                 if (entry.isIntersecting) {
                     nav.classList.add('hidden-on-home');
                 } else {
@@ -164,16 +177,18 @@ import Proyects from '@components/Proyects.astro';
         if (inicioSection) {
             navbarObserver.observe(inicioSection);
         }
+        
+        // Listener extra para manejar cambios de tamaño de ventana (ej: rotar tablet)
+        window.addEventListener('resize', () => {
+            if (!isMobile()) {
+                // Si pasamos a escritorio, liberamos todo
+                document.body.style.overflow = 'auto';
+                document.documentElement.style.overflow = 'auto';
+            } else if (window.scrollY < 20) {
+                // Si pasamos a móvil y estamos arriba, bloqueamos
+                document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
+            }
+        });
     </script>
-
-    <style>
-        @keyframes drop {
-            0% { transform: translateY(-100%); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(250%); opacity: 0; }
-        }
-        .animate-drop {
-            animation: drop 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
-        }
-    </style>
 </Layout>

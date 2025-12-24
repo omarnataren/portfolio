@@ -3,10 +3,14 @@ interface Props {
     role: string;
     timeline: string;
     tags: string[];
-    repoLink: string;
+    repoLink?: string;
+    otherLink?: {
+        href: string;
+        label: string;
+    };
 }
 
-const { role, timeline, tags, repoLink } = Astro.props;
+const { role, timeline, tags, repoLink, otherLink } = Astro.props;
 ---
 
 <aside class="lg:col-span-1" style="transition-delay: 0.6s;">
@@ -29,9 +33,16 @@ const { role, timeline, tags, repoLink } = Astro.props;
             </div>
         </div>
 
-        <a href={repoLink} target="_blank" class="block w-full py-4 bg-white text-black text-center font-bold hover:scale-105 transition-transform group">
-            VER CÓDIGO <i class="fab fa-github ml-2 group-hover:rotate-12 transition-transform"></i>
-        </a>
+        {(repoLink) &&(
+            <a href={repoLink} target="_blank" class="block w-full py-4 bg-white text-black text-center font-bold hover:scale-105 transition-transform group">
+                VER CÓDIGO <i class="fab fa-github ml-2 group-hover:rotate-12 transition-transform"></i>
+            </a>
+        )}
+        {(otherLink) &&(
+            <a href={otherLink.href} target="_blank" class="block w-full mt-4 py-4 bg-white text-black text-center font-bold hover:scale-105 transition-transform group">
+                {otherLink.label} <i class="fas fa-external-link-alt ml-2 group-hover:rotate-12 transition-transform"></i>
+            </a>
+        )}
 
     </div>
 </aside>
