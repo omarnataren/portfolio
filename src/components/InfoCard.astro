@@ -5,6 +5,7 @@ interface Props {
     icon?: string;
     iconColorClass?: string;
     hoverBorderColorClass?: string;
+    bgColorClass?: string;
 }
 
 const { 
@@ -12,11 +13,12 @@ const {
     description, 
     icon = "fas fa-info-circle", 
     iconColorClass = "text-blue-400",
-    hoverBorderColorClass = "hover:border-blue-500/30"
+    hoverBorderColorClass = "hover:border-blue-500/30",
+    bgColorClass = "bg-blue-500/10"
 } = Astro.props;
 ---
 
-<li class={`bg-highlight p-6 rounded-md border border-white/5 ${hoverBorderColorClass} transition-colors list-none`}>
+<li class={`${bgColorClass} p-6 rounded-md border border-white/5 ${hoverBorderColorClass} transition-colors list-none`}>
     <h3 class="text-white font-bold text-lg mb-2 flex items-center gap-2">
         <i class={`${icon} ${iconColorClass}`}></i> {title}
     </h3>

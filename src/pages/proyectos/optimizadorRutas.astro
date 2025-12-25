@@ -39,7 +39,7 @@ const project = {
             <PhotoCarrousel images={project.images} />
         </section> -->
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div class="flex flex-col-reverse lg:grid lg:grid-cols-3 gap-12">
             
             <!-- COLUMNA IZQUIERDA: Storytelling -->
             <div class="lg:col-span-2 space-y-12" style="transition-delay: 0.4s;">
@@ -79,6 +79,7 @@ const project = {
                             icon="fas fa-route"
                             iconColorClass="text-green-400"
                             hoverBorderColorClass="hover:border-green-500/30"
+                            bgColorClass="bg-green-500/10"
                         />
                         <InfoCard 
                             title="Firebase Real-time Sync"
@@ -86,6 +87,7 @@ const project = {
                             icon="fas fa-fire"
                             iconColorClass="text-orange-400"
                             hoverBorderColorClass="hover:border-orange-500/30"
+                            bgColorClass="bg-orange-500/10"
                         />
                     </ul>
                 </section>

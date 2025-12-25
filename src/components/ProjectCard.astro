@@ -10,6 +10,7 @@ interface Props {
     gradientTo?: string;
     pageLink: string;
     image?: string ;
+    bgColorClass?: string;
 }
 
 const { 
@@ -20,13 +21,14 @@ const {
     pageLink,
     image,
     gradientFrom = "#333", 
-    gradientTo = "#000" 
+    gradientTo = "#000",
+    bgColorClass = "bg-highlight/50"
 } = Astro.props;
 
 const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}, ${gradientTo});`;
 ---
 
-<article class="project-card border border-white/10 bg-highlight/50 rounded-md group">
+<article class={`project-card border border-white/10 ${bgColorClass} rounded-md group`}>
     <!-- Imagen de fondo (Gradient) -->
     <div class="project-bg-image" style={gradientStyle}></div>
     

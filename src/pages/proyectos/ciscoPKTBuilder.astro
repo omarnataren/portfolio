@@ -12,6 +12,10 @@ const project = {
     timeline: "2024",
     tags: ["Python", "Flask", "Web UI (HTML/JS)", "Cisco CLI", "Automation"],
     repoLink: "https://github.com/omarnataren/Cisco-Pkt-net-config",
+    otherLink:{
+        href: "https://ciscopkt-config.onrender.com",
+        label: "Live Demo"
+    },
     images: [
         "/images/projects/ciscoPKT/Cisco_img1.png",
         "/images/projects/ciscoPKT/Cisco_img2.png",
@@ -43,7 +47,7 @@ const project = {
         </section>
 
         <!-- CONTENIDO PRINCIPAL (2 Columnas) -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div class="flex flex-col-reverse lg:grid lg:grid-cols-3 gap-12">
             
             <!-- COLUMNA IZQUIERDA: Storytelling -->
             <div class="lg:col-span-2 space-y-12" style="transition-delay: 0.4s;">
@@ -86,13 +90,15 @@ const project = {
                             icon="fab fa-python"
                             iconColorClass="text-blue-400"
                             hoverBorderColorClass="hover:border-blue-500/30"
+                            bgColorClass="bg-blue-500/10"
                         />
                         <InfoCard 
                             title="Interfaz Web Reactiva"
                             description="El frontend no es solo estético; guía al ingeniero a través del flujo de configuración, previniendo conflictos de IP antes de que ocurran y proporcionando una experiencia visual similar a configurar hardware real de Cisco, pero simplificada."
                             icon="fas fa-desktop"
                             iconColorClass="text-green-400"
-                            hoverBorderColorClass="hover:border-blue-500/30"
+                            hoverBorderColorClass="hover:border-green-500/30"
+                            bgColorClass="bg-green-500/10"
                         />
                     </ul>
                 </section>
@@ -120,6 +126,7 @@ const project = {
                 timeline={project.timeline}
                 tags={project.tags}
                 repoLink={project.repoLink}
+                otherLink={project.otherLink}}
             />
 
         </div>
