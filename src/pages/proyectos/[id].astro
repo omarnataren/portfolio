@@ -1,0 +1,127 @@
+---
+import Layout from '@layouts/Layout.astro';
+import InfoCard from '@components/InfoCard.astro';
+import MetaInfo from '@components/MetaInfo.astro';
+import PhotoCarrousel from '@components/PhotoCarrousel.astro';
+import BackButton from '@components/BackButton.astro';
+import { projects } from '../../data/projects';
+
+export async function getStaticPaths() {
+    return projects.map((project) => ({
+        params: { id: project.id },
+        props: { project },
+    }));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={`${project.title} | Omar Nataren`}>
+
+    <main class="max-w-5xl mx-auto px-6 pt-10 pb-8">
+        
+        <!-- HEADER DEL PROYECTO -->
+        <header class="mb-12 relative">
+            <div class="flex flex-col md:flex-row md:items-center xl:block gap-6 mb-4 xl:mb-0">
+                <BackButton />
+                <h1 class="text-5xl md:text-7xl mb-2 font-extrabold text-white m-0">
+                    {project.title}
+                </h1>
+            </div>
+            <p class="text-2xl text-secondary font-light tracking-wide">
+                {project.subtitle}
+            </p>
+        </header>
+
+        <!-- CARRUSEL DE IMÁGENES -->
+        {project.images && project.images.length > 0 && (
+            <section class="w-full max-w-7xl mx-auto mb-16" style="transition-delay: 0.2s;">
+                <PhotoCarrousel images={project.images} />
+            </section>
+        )}
+
+        <!-- CONTENIDO PRINCIPAL (2 Columnas) -->
+        <div class="flex flex-col-reverse lg:grid lg:grid-cols-3 gap-12">
+            
+            <!-- COLUMNA IZQUIERDA: Storytelling -->
+            <div class="lg:col-span-2 space-y-12" style="transition-delay: 0.4s;">
+                
+                {project.sections.map((section) => (
+                    <section>
+                        <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                            <span class={section.colorClass}>{section.number}</span> {section.title}
+                        </h2>
+                        
+                        {section.type === 'text' && section.content && (
+                            section.content.map((paragraph) => (
+                                <p class="text-lg text-secondary leading-relaxed mb-4" set:html={paragraph}></p>
+                            ))
+                        )}
+
+                        {section.type === 'list' && (
+                            <>
+                                {section.content && section.content.map((paragraph) => (
+                                    <p class="text-lg text-secondary leading-relaxed mb-4" set:html={paragraph}></p>
+                                ))}
+                                {section.listItems && (
+                                    <div class="space-y-4 text-secondary text-lg">
+                                        {section.listItems.map((item) => (
+                                            <p>
+                                                {item.title && <span class="text-white font-bold">{item.title}:</span>} {item.description}
+                                            </p>
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {section.type === 'cards' && (
+                            <>
+                                {section.content && section.content.map((paragraph) => (
+                                    <p class="text-lg text-secondary leading-relaxed mb-4" set:html={paragraph}></p>
+                                ))}
+                                {section.cards && (
+                                    <ul class="space-y-6 mt-6">
+                                        {section.cards.map((card) => (
+                                            <InfoCard 
+                                                title={card.title}
+                                                description={card.description}
+                                                icon={card.icon}
+                                                iconColorClass={card.iconColorClass}
+                                                hoverBorderColorClass={card.hoverBorderColorClass}
+                                                bgColorClass={card.bgColorClass}
+                                            />
+                                        ))}
+                                    </ul>
+                                )}
+                            </>
+                        )}
+
+                        {section.type === 'impact' && section.impactContent && (
+                            <div class={`${section.impactContent.bgColorClass} border-l-4 ${section.impactContent.borderColorClass} p-6 rounded-r-lg`}>
+                                <p class="text-lg text-white font-medium italic">
+                                    {section.impactContent.quote}
+                                </p>
+                                <p class="text-secondary text-sm mt-2">
+                                    {section.impactContent.description}
+                                </p>
+                            </div>
+                        )}
+                    </section>
+                ))}
+
+            </div>
+
+            <!-- COLUMNA DERECHA: Meta-información (Sticky) -->
+            <MetaInfo 
+                role={project.role}
+                timeline={project.timeline}
+                tags={project.tags}
+                repoLink={project.repoLink}
+                otherLink={project.otherLink}
+            />
+
+        </div>
+        
+    </main>
+</Layout>

@@ -40,7 +40,7 @@
             const isFloating = btn.classList.contains('floating-back-btn');
 
             // Ajustamos el umbral a -50 para que el efecto sea más notorio al bajar
-            if (!isFloating && rect.top < -50) {
+            if (!isFloating && rect.top < -40) {
                 syncWrapperSize();
                 btn.classList.add('floating-back-btn');
                 updateButtonPosition();
