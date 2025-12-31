@@ -1,0 +1,51 @@
+---
+import ProjectCard from '@components/ProjectCard.astro';
+---
+
+<section id="proyectos" class="pt-8 pb-20 border-b border-black">
+        <h2 class="section-title text-white text-8xl">
+            &gt; PROYECTOS
+        </h2>
+            
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <ProjectCard 
+                title="Legado"
+                tech="Flutter / Firebase"
+                description="App móvil desarrollada en Teteocán para conectar viajeros con anfitriones de cultura local."
+                pageLink='/proyectos/legado'
+                gradientFrom="#ff416c"
+                gradientTo="#ff4b2b"
+                image="/images/projects/Legado/Legado_img1.png"                    
+                bgColorClass="bg-red-500/10"                
+                />
+            <ProjectCard 
+                title="Cisco Pkt Net Config"
+                tech="Python / Networking"
+                description="Simulaciones y configuraciones avanzadas de redes utilizando Cisco Packet Tracer."
+                pageLink='/proyectos/ciscoPKTBuilder'
+                gradientFrom="#0f2027"
+                gradientTo="#2c5364"
+                image="/images/projects/ciscoPKT/Cisco_img1.png"
+                bgColorClass="bg-blue-500/10"
+            />
+            <ProjectCard 
+                title="Mi Tiendita"
+                tech="Angular / NestJS"
+                description="Sistema de gestión integral (ERP ligero) diseñado para la administración interna de una tienda."
+                pageLink='/proyectos/miTiendita'
+                gradientFrom="#0f0c29"
+                gradientTo="#302b63"
+                bgColorClass="bg-purple-500/10"
+            />
+            <ProjectCard 
+                title="Optimizador de Rutas"
+                tech="Java / Algorithms"
+                description="Sistema de optimización de rutas de entrega de paquetes y logística de distribución"
+                pageLink='/proyectos/optimizadorRutas'
+                gradientFrom="#11998e"
+                gradientTo="#38ef7d"
+                image="/images/projects/OptimizadorRutas/Opt_img1.png"
+                bgColorClass="bg-green-500/10"
+            />    
+        </div>
+</section>

@@ -5,7 +5,7 @@ import Layout from '@layouts/Layout.astro';
 import Particles from '@components/Particles.astro'; 
 import SideNavbar from '@components/SideNavbar.astro';
 import Stack from '@components/Stack.astro';
-import Proyects from '@components/Proyects.astro';
+import Projects from '@components/ProJects.astro';
 ---
 
 <Layout title="Omar Nataren | Software Engineer" withSidebar={true} enableExitAnimations={true}>
@@ -17,46 +17,42 @@ import Proyects from '@components/Proyects.astro';
         <!-- Renderizamos las partículas -->
         <Particles />
         
-        <section id="inicio" class="pb-15 md:pb-0 relative min-h-screen w-full mb-6 md:mb-0 flex flex-col justify-center items-center md:items-start border-b border-white/10 overflow-hidden -ml-8">
+        <section id="inicio" class="pb-15 md:pb-0 relative min-h-screen w-full mb-6 md:mb-0 flex flex-col justify-start pt-32 md:justify-center md:pt-0 items-start border-b border-white/10 overflow-hidden">
             
-            <div class="relative z-10 w-full max-w-5xl cursor-default">
-                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 md:text-left">
+            <div class="relative z-10 w-full max-w-5xl cursor-default px-4 md:px-0">
+                <h1 id="hero-title" class="text-4xl sm:text-5xl md:text-9xl font-extrabold text-white mb-2 text-left">
                     OMAR NATAREN
                 </h1>
-                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-10 tracking-widest md:text-left">
-                    // INGENIERO DE SOFTWARE - ESPECIALIZADO EN ARQUITECTURA DE SISTEMAS ESCALABLES Y DISEÑO UI/UX
+                <h3 id="hero-subtitle" class="cursor-default text-sm sm:text-lg md:text-4xl text-secondary mb-6 md:mb-10 tracking-widest text-left">
+                    // DESARROLLADOR FULL STACK CON ENFOQUE EN UI/UX Y ARQUITECTURA DE SOFTWARE
                 </h3>
-                <div id="hero-buttons" class="flex flex-wrap justify-center md:justify-start gap-4">
-                    <a href="#proyectos" name="proyectos" class="md:text-xl text-md text-white/80 border border-white/50 py-3 px-6 hover:bg-white hover:text-black transition duration-300 flex items-center justify-center">
+                <div id="hero-buttons" class="flex flex-wrap justify-start gap-2 md:gap-4">
+                    <a href="#proyectos" name="proyectos" class="md:text-xl text-xs sm:text-sm text-white/80 border border-white/50 py-2 px-4 md:py-3 md:px-6 hover:bg-white hover:text-black transition duration-300 flex items-center justify-center whitespace-nowrap">
                         [ EXPLORAR TRABAJO ]
                     </a>
-                    <a href="https://github.com/omarnataren" aria-label="Go to Github" target="_blank" class="text-lg text-white/80 border border-white/50 w-14 h-14 flex items-center justify-center hover:bg-white hover:text-black transition duration-300">
-                        <i class="fab fa-github text-2xl"></i>
+                    <a href="https://github.com/omarnataren" aria-label="Go to Github" target="_blank" class="text-lg text-white/80 border border-white/50 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center hover:bg-white hover:text-black transition duration-300">
+                        <i class="fab fa-github text-lg md:text-2xl"></i>
                     </a>
-                    <a href="https://www.linkedin.com/in/omar-nataren-arredondo-189531370/" aria-label="Go to LinkedIn" target="_blank" class="text-lg text-white/80 border border-white/50 w-14 h-14 flex items-center justify-center hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition duration-300">
-                        <i class="fab fa-linkedin text-2xl"></i>
+                    <a href="https://www.linkedin.com/in/omar-nataren-arredondo-189531370/" aria-label="Go to LinkedIn" target="_blank" class="text-lg text-white/80 border border-white/50 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition duration-300">
+                        <i class="fab fa-linkedin text-lg md:text-2xl"></i>
                     </a>
                 </div>
             </div>
             
             <div class="absolute bottom-0 left-0 w-full h-32 bg-linear-to-t from-dark-bg to-transparent z-0 pointer-events-none"></div>
-            <p class="md:hidden absolute bottom-42 left-1/2 transform -translate-x-1/2 text-sm text-white/80 tracking-widest">
+            <p class="md:hidden absolute bottom-48 left-1/2 transform -translate-x-1/2 text-xs text-white/80 tracking-widest whitespace-nowrap">
                     Haz click para scrollear
             </p>
-            <!-- Scroll Down Arrow (SOLO VISIBLE EN MÓVIL: md:hidden) -->
-            <button id="scroll-down-btn" class="md:hidden absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer group flex items-center justify-center w-16 h-16" aria-label="Scroll down">
-                <!-- Círculo punteado rotando (animate-spin es nativo de Tailwind, lo hacemos más lento con duración custom si quieres, o default) -->
-                <!-- Usamos animate-[spin_10s_linear_infinite] para una rotación lenta y elegante -->
+            <!-- Scroll Down Arrow (SOLO VISIBLE EN MÓVIL) -->
+            <button id="scroll-down-btn" class="md:hidden absolute bottom-32 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer group flex items-center justify-center w-16 h-16" aria-label="Scroll down">
                 
                 <div class="absolute inset-0 border-dashed border-2 border-white/40 rounded-full animate-[spin_8s_linear_infinite]"></div>
-                
-                <!-- Flecha estática -->
                 <i class="fas fa-arrow-down text-xl text-white/80"></i>
             </button>
 
         </section>
 
-        <Proyects />
+        <Projects />
 
         <AboutMe />
 
@@ -120,23 +116,9 @@ import Proyects from '@components/Proyects.astro';
         };
 
         // Detectar scroll para re-bloquear (SOLO EN MÓVIL)
-        window.addEventListener('scroll', () => {
-            if (initialHashLoad) return;
-            
-            // Si no es móvil, no hacemos nada de bloqueo
-            if (!isMobile()) return;
+        // SE HA ELIMINADO EL LISTENER DE SCROLL PARA EVITAR RE-BLOQUEOS INDESEADOS
+        // El usuario quiere que solo se bloquee al cargar la página en el inicio, no al navegar.
 
-            // Lógica Móvil: Re-activa el modo inmersivo si subimos al tope
-            if (!isNavigating && window.scrollY < 20) {
-                document.body.style.overflow = 'hidden';
-                document.documentElement.style.overflow = 'hidden';
-                window.scrollTo(0, 0); 
-                
-                if (window.location.hash) {
-                    history.replaceState(null, '', ' ');
-                }
-            }
-        });
 
         // Event Listeners
         document.getElementById('scroll-down-btn')?.addEventListener('click', () => {
@@ -184,11 +166,12 @@ import Proyects from '@components/Proyects.astro';
                 // Si pasamos a escritorio, liberamos todo
                 document.body.style.overflow = 'auto';
                 document.documentElement.style.overflow = 'auto';
-            } else if (window.scrollY < 20) {
-                // Si pasamos a móvil y estamos arriba, bloqueamos
-                document.body.style.overflow = 'hidden';
-                document.documentElement.style.overflow = 'hidden';
             }
+            // Eliminamos la lógica de re-bloqueo en resize para evitar conflictos
         });
+
+        // Aseguramos que se revise el estado al cargar completamente la página
+        window.addEventListener('load', checkInitialScroll);
+
     </script>
 </Layout>
