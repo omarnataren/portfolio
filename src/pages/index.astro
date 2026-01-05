@@ -17,38 +17,31 @@ import MyProjects from '@components/MyProjects.astro';
         <!-- Renderizamos las partículas -->
         <Particles />
         
-        <section id="inicio" class="pb-15 md:pb-0 relative min-h-screen w-full mb-6 md:mb-0 flex flex-col justify-start pt-32 md:justify-center md:pt-0 items-start border-b border-white/10 overflow-hidden">
+        <section id="inicio" class="pb-15 md:pb-0 relative min-h-screen w-full mb-6 md:mb-0 flex flex-col justify-center items-start border-b border-white/10 overflow-hidden">
             
             <div class="relative z-10 w-full max-w-5xl cursor-default px-4 md:px-0">
-                <h1 id="hero-title" class="text-4xl sm:text-5xl md:text-9xl font-extrabold text-white mb-2 text-left">
+                <h1 id="hero-title" class="text-6xl md:text-9xl font-extrabold text-white mb-2 text-left">
                     OMAR NATAREN
                 </h1>
-                <h3 id="hero-subtitle" class="cursor-default text-sm sm:text-lg md:text-4xl text-secondary mb-6 md:mb-10 tracking-widest text-left">
+                <h3 id="hero-subtitle" class="cursor-default text-xl md:text-4xl text-secondary mb-6 md:mb-10 tracking-widest text-left">
                     // DESARROLLADOR FULL STACK CON ENFOQUE EN UI/UX Y ARQUITECTURA DE SOFTWARE
                 </h3>
                 <div id="hero-buttons" class="flex flex-wrap justify-start gap-2 md:gap-4">
-                    <a href="#proyectos" name="proyectos" class="md:text-xl text-xs sm:text-sm text-white/80 border border-white/50 py-2 px-4 md:py-3 md:px-6 hover:bg-white hover:text-black transition duration-300 flex items-center justify-center whitespace-nowrap">
+                    <a href="#proyectos" name="proyectos" class="md:text-xl text-sm text-white/80 border border-white/50 py-2 px-4 md:py-3 md:px-6 hover:bg-white hover:text-black transition duration-300 flex items-center justify-center whitespace-nowrap">
                         [ EXPLORAR TRABAJO ]
                     </a>
-                    <a href="https://github.com/omarnataren" aria-label="Go to Github" target="_blank" class="text-lg text-white/80 border border-white/50 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center hover:bg-white hover:text-black transition duration-300">
+                    <a href="https://github.com/omarnataren" aria-label="Go to Github" target="_blank" class="text-lg text-white/80 border border-white/50 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center hover:bg-white hover:text-black transition duration-300">
                         <i class="fab fa-github text-lg md:text-2xl"></i>
                     </a>
-                    <a href="https://www.linkedin.com/in/omar-nataren-arredondo-189531370/" aria-label="Go to LinkedIn" target="_blank" class="text-lg text-white/80 border border-white/50 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition duration-300">
+                    <a href="https://www.linkedin.com/in/omar-nataren-arredondo-189531370/" aria-label="Go to LinkedIn" target="_blank" class="text-lg text-white/80 border border-white/50 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5] transition duration-300">
                         <i class="fab fa-linkedin text-lg md:text-2xl"></i>
                     </a>
                 </div>
             </div>
             
             <div class="absolute bottom-0 left-0 w-full h-32 bg-linear-to-t from-dark-bg to-transparent z-0 pointer-events-none"></div>
-            <p class="md:hidden absolute bottom-48 left-1/2 transform -translate-x-1/2 text-xs text-white/80 tracking-widest whitespace-nowrap">
-                    Haz click para scrollear
-            </p>
-            <!-- Scroll Down Arrow (SOLO VISIBLE EN MÓVIL) -->
-            <button id="scroll-down-btn" class="md:hidden absolute bottom-32 left-1/2 transform -translate-x-1/2 z-20 cursor-pointer group flex items-center justify-center w-16 h-16" aria-label="Scroll down">
-                
-                <div class="absolute inset-0 border-dashed border-2 border-white/40 rounded-full animate-[spin_8s_linear_infinite]"></div>
-                <i class="fas fa-arrow-down text-xl text-white/80"></i>
-            </button>
+            
+            
 
         </section>
 
@@ -62,72 +55,22 @@ import MyProjects from '@components/MyProjects.astro';
     </main>
 
     <script is:inline>
-        // Función para detectar si es móvil (coincide con el md:hidden de Tailwind que es 768px)
-        const isMobile = () => window.innerWidth < 768;
-
-        // Bloqueo inmediato del scroll SOLO si es móvil y estamos en inicio
-        if (isMobile() && (!window.location.hash || window.location.hash === '#inicio')) {
-            document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden';
-            
-            if ('scrollRestoration' in history) {
-                history.scrollRestoration = 'manual';
-            }
-            window.scrollTo(0, 0);
-        }
-
-        let isNavigating = false;
-        let initialHashLoad = false;
-
-        // 1. Lógica de Inicialización
-        const checkInitialScroll = () => {
-            // Si hay hash, o si NO es móvil, aseguramos scroll libre
-            if ((window.location.hash && window.location.hash !== '#inicio') || !isMobile()) {
-                document.body.style.overflow = 'auto';
-                document.documentElement.style.overflow = 'auto';
-                
-                if (window.location.hash && window.location.hash !== '#inicio') {
-                    initialHashLoad = true;
-                    setTimeout(() => {
-                        initialHashLoad = false;
-                    }, 1500);
-                }
-            }
-        };
-        
-        checkInitialScroll();
-
-        const unlockAndScroll = (targetId) => {
-            isNavigating = true;
-            
-            // Desbloqueamos todo
-            document.body.style.overflow = 'auto'; 
-            document.documentElement.style.overflow = 'auto';
-            
+        const scrollToSection = (targetId) => {
             const target = document.getElementById(targetId);
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth' });
                 history.pushState(null, '', `#${targetId}`);
             }
-            
-            setTimeout(() => {
-                isNavigating = false;
-            }, 1000);
         };
-
-        // Detectar scroll para re-bloquear (SOLO EN MÓVIL)
-        // SE HA ELIMINADO EL LISTENER DE SCROLL PARA EVITAR RE-BLOQUEOS INDESEADOS
-        // El usuario quiere que solo se bloquee al cargar la página en el inicio, no al navegar.
-
 
         // Event Listeners
         document.getElementById('scroll-down-btn')?.addEventListener('click', () => {
-            unlockAndScroll('proyectos');
+            scrollToSection('proyectos');
         });
 
         document.querySelector('a[name="proyectos"]')?.addEventListener('click', (e) => {
             e.preventDefault();
-            unlockAndScroll('proyectos');
+            scrollToSection('proyectos');
         });
 
         document.querySelectorAll('.side-nav-item').forEach(link => {
@@ -136,7 +79,7 @@ import MyProjects from '@components/MyProjects.astro';
                 if (href && href.startsWith('#')) {
                     e.preventDefault();
                     const targetId = href.substring(1);
-                    unlockAndScroll(targetId);
+                    scrollToSection(targetId);
                 }
             });
         });
@@ -159,19 +102,5 @@ import MyProjects from '@components/MyProjects.astro';
         if (inicioSection) {
             navbarObserver.observe(inicioSection);
         }
-        
-        // Listener extra para manejar cambios de tamaño de ventana (ej: rotar tablet)
-        window.addEventListener('resize', () => {
-            if (!isMobile()) {
-                // Si pasamos a escritorio, liberamos todo
-                document.body.style.overflow = 'auto';
-                document.documentElement.style.overflow = 'auto';
-            }
-            // Eliminamos la lógica de re-bloqueo en resize para evitar conflictos
-        });
-
-        // Aseguramos que se revise el estado al cargar completamente la página
-        window.addEventListener('load', checkInitialScroll);
-
     </script>
 </Layout>
