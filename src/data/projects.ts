@@ -249,5 +249,80 @@ export const projects: Project[] = [
                 ]
             }
         ]
+    },
+    {
+        id: "miTiendita",
+        title: "Mi Tiendita",
+        subtitle: "Sistema de Punto de Venta Enterprise con Arquitectura de Microservicios.",
+        role: "Full Stack Developer (Angular/NestJS)",
+        timeline: "2024",
+        tags: ["Angular", "NestJS", "Supabase", "PostgreSQL", "JWT Auth"],
+        repoLink: "https://github.com/omarnataren/mi_tiendita",
+        images: [
+            "/images/projects/miTiendita/MiTiendita_img1.png",
+            "/images/projects/miTiendita/MiTiendita_img2.png",
+            "/images/projects/miTiendita/MiTiendita_img3.png",
+            "/images/projects/miTiendita/MiTiendita_img4.png",
+            "/images/projects/miTiendita/MiTiendita_img5.png"
+        ],
+        sections: [
+            {
+                type: 'text',
+                number: "01.",
+                title: "Más que un CRUD",
+                colorClass: "text-purple-400",
+                content: [
+                    "Muchas tiendas locales operan con cuadernos o Excel, limitando su crecimiento. Mi objetivo era crear un sistema <strong>Punto de Venta (POS)</strong> que rivalizara con el software de cadenas como OXXO, pero accesible.",
+                    "No se trataba solo de registrar ventas, sino de construir una infraestructura robusta. Implementé una arquitectura desacoplada utilizando <strong>Angular</strong> para una interfaz reactiva y rápida, y <strong>NestJS</strong> para un backend escalable y tipado, garantizando que el sistema pudiera manejar inventarios complejos y múltiples transacciones simultáneas."
+                ]
+            },
+            {
+                type: 'list',
+                number: "02.",
+                title: "Seguridad Granular (RBAC)",
+                colorClass: "text-purple-400",
+                content: [
+                    "En un entorno retail, la seguridad es crítica. Diseñé un sistema de autenticación con <strong>JWT (JSON Web Tokens)</strong> y un estricto Control de Acceso Basado en Roles (RBAC)."
+                ],
+                listItems: [
+                    {
+                        title: "Vendedor",
+                        description: "Solo puede escanear productos y generar ventas. Interfaz simplificada para velocidad."
+                    },
+                    {
+                        title: "Encargado de Paquetería",
+                        description: "Acceso exclusivo al módulo de inventarios y recepción de mercancía."
+                    },
+                    {
+                        title: "Admin (Encargado)",
+                        description: "Visión total del dashboard, métricas de ventas y gestión de usuarios."
+                    }
+                ]
+            },
+            {
+                type: 'cards',
+                number: "03.",
+                title: "Simulación de Hardware",
+                colorClass: "text-purple-400",
+                cards: [
+                    {
+                        title: "Generación de Tickets",
+                        description: "El sistema completa el ciclo de venta generando un ticket digital formateado profesionalmente. La interfaz está optimizada para entrada rápida de datos, pensada para conectarse plug-and-play con escáneres de códigos de barras e impresoras térmicas.",
+                        icon: "fas fa-receipt",
+                        iconColorClass: "text-purple-400",
+                        hoverBorderColorClass: "hover:border-purple-500/30",
+                        bgColorClass: "bg-purple-500/10"
+                    },
+                    {
+                        title: "Integridad de Datos (PostgreSQL)",
+                        description: "Usando Supabase (PostgreSQL), aseguré la integridad referencial de los datos. A diferencia de soluciones NoSQL rápidas, aquí cada transacción es ACID, garantizando que el inventario siempre cuadre con las ventas reportadas, vital para la contabilidad real.",
+                        icon: "fas fa-database",
+                        iconColorClass: "text-blue-400",
+                        hoverBorderColorClass: "hover:border-blue-500/30",
+                        bgColorClass: "bg-blue-500/10"
+                    }
+                ]
+            }
+        ]
     }
 ];
