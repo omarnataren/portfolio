@@ -48,7 +48,17 @@
 /* 3. Estilos globales extra */
 html {
     scroll-behavior: smooth;
-    scrollbar-gutter: stable;
+    /* scrollbar-gutter: stable; Eliminado para que no reserve espacio si está oculto */
+    
+    /* Ocultar scrollbar estándar (Firefox) */
+    scrollbar-width: none; 
+    /* Ocultar scrollbar (IE, Edge legacy) */
+    -ms-overflow-style: none; 
+}
+
+/* Ocultar scrollbar (Chrome, Safari, Opera) */
+html::-webkit-scrollbar {
+    display: none;
 }
 
 body {
