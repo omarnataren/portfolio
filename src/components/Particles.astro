@@ -11,7 +11,7 @@
     let hue = 0; 
 
     // Límites para rendimiento
-    const maxParticles = 300; 
+    const maxParticles = 400; 
 
     // Variable para rastrear la posición anterior y calcular la dirección del mouse
     let lastMouse = {
@@ -68,7 +68,6 @@
         handleMovement(event.clientX - rect.left, event.clientY - rect.top);
     });
 
-    // Eventos TÁCTILES (Móvil) - Usamos passive: false para evitar conflictos con scroll si fuera necesario, 
     // pero aquí queremos que el scroll funcione, así que solo detectamos movimiento.
     
     // touchstart: Reinicia la posición inicial para evitar "saltos" desde la última posición del mouse
@@ -103,7 +102,7 @@
         constructor(x: number, y: number, dx: number, dy: number) {
             this.x = x;
             this.y = y;
-            this.size = Math.random() * 6 + 2; 
+            this.size = Math.random() * 8 + 2; 
             
             // 2. FÍSICA INVERSA (Lado Contrario):
             // Normalizamos el vector de movimiento para obtener solo la dirección pura
@@ -112,8 +111,8 @@
             const dirY = dy / dist;
 
             // Velocidad base opuesta (-dir) + un poco de dispersión (spread) para que no sea una línea aburrida
-            const speed = Math.random() * 2 + 1; // Velocidad entre 1 y 3
-            const spread = 0.8; // Factor de caos lateral
+            const speed = Math.random() * 4 + 2; // Velocidad entre 2 y 4
+            const spread = 0.9; // Factor de caos lateral
 
             // La magia está en el signo negativo (-) antes de dirX/dirY
             this.speedX = (-dirX * speed) + (Math.random() * spread - spread/2);
