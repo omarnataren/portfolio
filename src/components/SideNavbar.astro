@@ -27,7 +27,48 @@ const { class: className } = Astro.props;
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const nav = document.querySelector('.nav-capsule');
-        
+        const navItems = document.querySelectorAll('.side-nav-item');
+        let isClickScrolling = false;
+        let scrollTimeout;
+
+        // Al hacer click: activar SOLO esa opción y bloquear el observer
+        // para que las secciones intermedias no hagan el efecto al pasar
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                isClickScrolling = true;
+                navItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // Cuando el scroll se detiene, reactivar el observer
+        window.addEventListener('scroll', () => {
+            if (!isClickScrolling) return;
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                isClickScrolling = false;
+            }, 150);
+        }, { passive: true });
+
+        // Marcar la opción activa según la sección visible en pantalla
+        const activeObserver = new IntersectionObserver((entries) => {
+            if (isClickScrolling) return;
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navItems.forEach(item => {
+                        const isActive = item.getAttribute('href') === `#${entry.target.id}`;
+                        item.classList.toggle('active', isActive);
+                    });
+                }
+            });
+        }, { rootMargin: '-40% 0px -60% 0px' });
+
+        navItems.forEach(item => {
+            const id = item.getAttribute('href')?.substring(1);
+            const section = id && document.getElementById(id);
+            if (section) activeObserver.observe(section);
+        });
+
         // Detectar clicks en enlaces que llevan a otras páginas para animar salida
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -120,6 +161,44 @@ const { class: className } = Astro.props;
         background-color: rgba(255, 255, 255, 0.1);
         color: #FFFFFF;
         transform: scale(1.1);
+    }
+
+    /* Opción seleccionada: icono negro */
+    .side-nav-item.active,
+    .side-nav-item.active:hover {
+        background-color: transparent;
+        color: #000000;
+    }
+
+    /* Fondo blanco con esquinas escalonadas (círculo estilo 8 bits) */
+    .side-nav-item.active::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-color: #FFFFFF;
+        clip-path: polygon(
+            8px 0,
+            calc(100% - 8px) 0,
+            calc(100% - 8px) 4px,
+            calc(100% - 4px) 4px,
+            calc(100% - 4px) 8px,
+            100% 8px,
+            100% calc(100% - 8px),
+            calc(100% - 4px) calc(100% - 8px),
+            calc(100% - 4px) calc(100% - 4px),
+            calc(100% - 8px) calc(100% - 4px),
+            calc(100% - 8px) 100%,
+            8px 100%,
+            8px calc(100% - 4px),
+            4px calc(100% - 4px),
+            4px calc(100% - 8px),
+            0 calc(100% - 8px),
+            0 8px,
+            4px 8px,
+            4px 4px,
+            8px 4px
+        );
     }
 
     /* Tooltip */

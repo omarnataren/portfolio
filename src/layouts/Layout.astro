@@ -48,13 +48,37 @@ const {
         <meta http-equiv="Expires" content="0" />
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        
+
 		<title>{title}</title>
+
+        <!-- Continuación de la animación de entrada desde una ProjectCard.
+             Va inline y en el <head> para que se aplique antes del primer pintado. -->
+        <script is:inline>
+            (function () {
+                try {
+                    var raw = sessionStorage.getItem('pj:enter');
+                    if (!raw) return;
+                    sessionStorage.removeItem('pj:enter');
+
+                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+                    var data = JSON.parse(raw);
+                    if (!data || !data.from || Date.now() - data.t > 4000) return;
+
+                    var root = document.documentElement;
+                    root.style.setProperty('--pj-from', data.from);
+                    root.style.setProperty('--pj-to', data.to);
+                    root.classList.add('pj-entering');
+                } catch (e) {}
+            })();
+        </script>
 	</head>
 	<body 
         class:list={["bg-dark-bg text-primary font-code-mono antialiased", { "md:pl-32": withSidebar }]}
         data-exit-animations={enableExitAnimations.toString()}
     >
+        <div class="pj-enter-overlay" aria-hidden="true"></div>
+
 		<slot />
         
         <script>
@@ -187,5 +211,62 @@ const {
         .section-title {
             font-size: 3.5rem;
         }
+    }
+
+    /* ---------------------------------------------------------------
+       Entrada del proyecto (continúa la expansión de la ProjectCard).
+       Todo es CSS puro: si el JS fallara, igual se ve el contenido.
+    --------------------------------------------------------------- */
+    .pj-enter-overlay { display: none; }
+
+    html.pj-entering .pj-enter-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        pointer-events: none;
+        background-image: linear-gradient(135deg, var(--pj-from, #333333), var(--pj-to, #000000));
+        filter: brightness(0.4);
+        transform-origin: center center;
+        will-change: opacity, transform;
+        animation: pj-overlay-out 750ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* El color del proyecto se abre hacia el espectador y descubre la página */
+    @keyframes pj-overlay-out {
+        0%   { opacity: 1; transform: scale(1); }
+        100% { opacity: 0; transform: scale(1.4); }
+    }
+
+    /* El contenido llega desde "dentro" de la tarjeta */
+    html.pj-entering body > main {
+        animation: pj-content-in 900ms cubic-bezier(0.16, 1, 0.3, 1) 140ms backwards;
+    }
+
+    @keyframes pj-content-in {
+        0%   { opacity: 0; transform: scale(1.07); }
+        55%  { opacity: 1; }
+        100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* La cabecera sube un poco después, para dar profundidad por capas */
+    html.pj-entering body > main > header {
+        animation: pj-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) 280ms backwards;
+    }
+
+    html.pj-entering body > footer {
+        animation: pj-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) 420ms backwards;
+    }
+
+    @keyframes pj-rise {
+        0%   { opacity: 0; transform: translateY(28px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html.pj-entering .pj-enter-overlay { display: none; }
+        html.pj-entering body > main,
+        html.pj-entering body > main > header,
+        html.pj-entering body > footer { animation: none; }
     }
 </style>

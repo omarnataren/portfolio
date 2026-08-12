@@ -13,14 +13,14 @@ interface Props {
     bgColorClass?: string;
 }
 
-const { 
-    title, 
-    tech, 
-    description, 
-    link, 
+const {
+    title,
+    tech,
+    description,
+    link,
     pageLink,
     image,
-    gradientFrom = "#333", 
+    gradientFrom = "#333",
     gradientTo = "#000",
     bgColorClass = "bg-highlight/50"
 } = Astro.props;
@@ -28,17 +28,23 @@ const {
 const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}, ${gradientTo});`;
 ---
 
-<article class={`project-card border border-white/10 ${bgColorClass} rounded-md group`}>
+<article
+    class={`project-card border border-white/10 ${bgColorClass} rounded-md group`}
+    data-project-card
+    data-page-link={pageLink}
+    data-gradient-from={gradientFrom}
+    data-gradient-to={gradientTo}
+>
     <!-- Imagen de fondo (Gradient) -->
     <div class="project-bg-image" style={gradientStyle}></div>
-    
+
     <!-- Imagen superpuesta (opcional) -->
     {image && (
         <div class="project-overlay-image">
-            <Image 
-                src={image} 
-                alt={title} 
-                class="w-full h-full object-cover" 
+            <Image
+                src={image}
+                alt={title}
+                class="w-full h-full object-cover"
                 width={800}
                 height={600}
             />
@@ -46,18 +52,18 @@ const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}
     )}
 
     <!-- Dark Gradient Overlay for Readability (Top-Left to Bottom-Right) -->
-    <div class="absolute inset-0 bg-linear-to-br from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 z-5 pointer-events-none"></div>
+    <div class="project-scrim absolute inset-0 bg-linear-to-br from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 z-5 pointer-events-none"></div>
 
-    <div class="project-content p-6 h-full flex flex-col justify-between relative z-10 cursor-default">
+    <div class="project-content p-6 h-full flex flex-col justify-between relative z-10">
         <div class="project-header transition-transform duration-300 group-hover:translate-y-4">
             <span class="text-xs text-secondary font-bold tracking-wider uppercase">[{tech}]</span>
             <h3 class="text-2xl font-bold mt-2 text-white">{title}</h3>
         </div>
-        
+
         <p class="project-description text-secondary mt-4 transition-all duration-300 group-hover:opacity-0 group-hover:translate-y-4">
             {description}
         </p>
-        
+
         <div class="mt-4 pt-4 border-t border-white/10 flex justify-end">
             {link && (
             <a href={link} target="_blank" class="text-white font-bold hover:text-secondary text-sm flex items-center gap-2">
@@ -65,12 +71,12 @@ const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}
             </a>
             )}
             {pageLink && (
-            <a href={pageLink} target="_self" class="text-white font-bold hover:text-secondary text-sm flex items-center gap-2">
+            <a href={pageLink} target="_self" class="project-cta text-white font-bold hover:text-secondary text-sm flex items-center gap-2">
                 VER MÁS <i class="fas fa-arrow-right"></i>
             </a>
             )}
         </div>
-        
+
     </div>
 </article>
 
@@ -79,8 +85,14 @@ const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}
         position: relative;
         overflow: hidden;
         min-height: 280px;
+        cursor: pointer;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    
+
+    .project-card:active {
+        transform: scale(0.985);
+    }
+
     .project-bg-image {
         position: absolute;
         top: 0;
@@ -93,7 +105,7 @@ const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}
         z-index: 0;
         filter: brightness(0.4);
     }
-    
+
     .project-card:hover .project-bg-image {
         opacity: 1;
     }
@@ -114,4 +126,286 @@ const gradientStyle = `background-image: linear-gradient(135deg, ${gradientFrom}
     .project-card:hover .project-overlay-image {
         opacity: 0.4; /* Transparencia para que se vea el gradiente debajo */
     }
+
+    @media (prefers-reduced-motion: reduce) {
+        .project-card:active { transform: none; }
+    }
 </style>
+
+<!-- Estilos de la capa de transición: se crean por JS, por eso deben ser globales -->
+<style is:global>
+    .pc-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        overflow: hidden;
+        pointer-events: none;
+        contain: strict;
+    }
+
+    .pc-box {
+        position: absolute;
+        overflow: hidden;
+        transform-origin: center center;
+        will-change: transform;
+        backface-visibility: hidden;
+    }
+
+    .pc-box > .pc-clone {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        cursor: default !important;
+    }
+
+    .pc-flash {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        filter: brightness(0.4);
+        will-change: opacity;
+    }
+</style>
+
+<script>
+    const DURATION = 700;
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-project-card]'));
+
+    let running = false;
+    let tracked: Animation[] = [];
+
+    const prefersReducedMotion = () =>
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const track = (animation: Animation) => {
+        tracked.push(animation);
+        return animation;
+    };
+
+    function enterProject(card: HTMLElement) {
+        const href = card.dataset.pageLink;
+        if (!href || running) return;
+
+        const from = card.dataset.gradientFrom || '#333333';
+        const to = card.dataset.gradientTo || '#000000';
+
+        // Sin animación si el usuario pide movimiento reducido
+        if (prefersReducedMotion()) {
+            window.location.href = href;
+            return;
+        }
+
+        // La página de destino lee esto para continuar la animación sin corte
+        try {
+            sessionStorage.setItem('pj:enter', JSON.stringify({ from, to, t: Date.now() }));
+        } catch {}
+
+        running = true;
+
+        // Neutralizamos el :active para medir la posición real de la tarjeta
+        card.style.transition = 'none';
+        card.style.transform = 'none';
+
+        const rect = card.getBoundingClientRect();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        // Sin medidas válidas no hay morph posible: navegamos directo
+        if (rect.width === 0 || rect.height === 0) {
+            window.location.href = href;
+            return;
+        }
+
+        // --- Capa de transición ---
+        const layer = document.createElement('div');
+        layer.className = 'pc-layer';
+
+        const box = document.createElement('div');
+        box.className = 'pc-box';
+        box.style.top = `${rect.top}px`;
+        box.style.left = `${rect.left}px`;
+        box.style.width = `${rect.width}px`;
+        box.style.height = `${rect.height}px`;
+
+        // Clonamos la tarjeta para que el morph sea pixel-perfect
+        const clone = card.cloneNode(true) as HTMLElement;
+        clone.removeAttribute('data-project-card');
+        clone.classList.add('pc-clone');
+        clone.style.transform = 'none';
+        clone.style.transition = 'none';
+
+        // Forzamos el estado "hover" en el clon (el clon nunca recibe :hover)
+        clone.querySelectorAll<HTMLElement>('.project-bg-image').forEach((el) => {
+            el.style.transition = 'none';
+            el.style.opacity = '1';
+        });
+        clone.querySelectorAll<HTMLElement>('.project-overlay-image').forEach((el) => {
+            el.style.transition = 'none';
+            el.style.opacity = '0.4';
+        });
+        const scrim = clone.querySelector<HTMLElement>('.project-scrim');
+        if (scrim) {
+            scrim.style.transition = 'none';
+            scrim.style.opacity = '1';
+        }
+
+        box.appendChild(clone);
+        layer.appendChild(box);
+
+        // Fundido final al color del proyecto: empalma con la página de destino
+        const flash = document.createElement('div');
+        flash.className = 'pc-flash';
+        flash.style.backgroundImage = `linear-gradient(135deg, ${from}, ${to})`;
+        layer.appendChild(flash);
+
+        document.body.appendChild(layer);
+
+        // Escala necesaria para que la tarjeta cubra por completo el viewport
+        const scale = Math.max(vw / rect.width, vh / rect.height) * 1.06;
+        const dx = vw / 2 - (rect.left + rect.width / 2);
+        const dy = vh / 2 - (rect.top + rect.height / 2);
+
+        // 1. El resto de la página retrocede y se desvanece (profundidad)
+        Array.from(document.body.children).forEach((child) => {
+            const el = child as HTMLElement;
+            if (el === layer) return;
+            if (['SCRIPT', 'STYLE', 'TEMPLATE', 'LINK', 'NOSCRIPT'].includes(el.tagName)) return;
+
+            // Origen de la escala en el centro del viewport, no del elemento
+            const r = el.getBoundingClientRect();
+            el.style.transformOrigin = `${vw / 2 - r.left}px ${vh / 2 - r.top}px`;
+
+            track(
+                el.animate(
+                    [
+                        { opacity: 1, transform: 'scale(1)' },
+                        { opacity: 0, transform: 'scale(1.12)' },
+                    ],
+                    {
+                        duration: DURATION,
+                        easing: 'cubic-bezier(0.55, 0, 0.35, 1)',
+                        fill: 'forwards',
+                    }
+                )
+            );
+        });
+
+        // 2. La tarjeta crece hasta ocupar toda la pantalla
+        track(
+            box.animate(
+                [
+                    { transform: 'translate(0px, 0px) scale(1)' },
+                    { transform: `translate(${dx}px, ${dy}px) scale(${scale})` },
+                ],
+                {
+                    duration: DURATION,
+                    easing: 'cubic-bezier(0.62, 0, 0.25, 1)',
+                    fill: 'forwards',
+                }
+            )
+        );
+
+        // 3. El borde y el radio se disuelven mientras crece
+        track(
+            clone.animate(
+                [
+                    { borderRadius: '0.375rem', borderColor: 'rgba(255,255,255,0.1)' },
+                    { borderRadius: '0rem', borderColor: 'rgba(255,255,255,0)' },
+                ],
+                { duration: DURATION * 0.55, easing: 'ease-out', fill: 'forwards' }
+            )
+        );
+
+        // 4. El contenido de la tarjeta se desvanece: lo "atravesamos"
+        const content = clone.querySelector<HTMLElement>('.project-content');
+        if (content) {
+            track(
+                content.animate(
+                    [
+                        { opacity: 1, transform: 'scale(1)' },
+                        { opacity: 0, transform: 'scale(1.25)' },
+                    ],
+                    { duration: 340, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' }
+                )
+            );
+        }
+
+        // 5. Fundido al color plano del proyecto justo antes de navegar
+        track(
+            flash.animate(
+                [
+                    { opacity: 0, offset: 0 },
+                    { opacity: 0, offset: 0.55 },
+                    { opacity: 1, offset: 1 },
+                ],
+                { duration: DURATION, easing: 'linear', fill: 'forwards' }
+            )
+        );
+
+        window.setTimeout(() => {
+            window.location.href = href;
+        }, DURATION - 60);
+    }
+
+    // Clic normal / clic con teclado que debe disparar la transición
+    const isPlainActivation = (event: MouseEvent) =>
+        !event.defaultPrevented &&
+        event.button === 0 &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.shiftKey &&
+        !event.altKey;
+
+    cards.forEach((card) => {
+        // Toda la tarjeta es clickeable
+        card.addEventListener('click', (event) => {
+            if (!isPlainActivation(event)) return;
+
+            // Los enlaces externos (GitHub) siguen su comportamiento normal
+            const target = event.target as Element | null;
+            if (target?.closest('a[target="_blank"]')) return;
+
+            event.preventDefault();
+            enterProject(card);
+        });
+
+        // El botón "VER MÁS" dispara exactamente la misma animación.
+        // Va aparte para que también funcione con Enter desde el teclado
+        // y para no depender de que el evento burbujee hasta la tarjeta.
+        const cta = card.querySelector<HTMLAnchorElement>('.project-cta');
+        if (cta) {
+            cta.addEventListener('click', (event) => {
+                if (!isPlainActivation(event)) return;
+
+                event.preventDefault();
+                event.stopPropagation();
+                enterProject(card);
+            });
+        }
+    });
+
+    // Si volvemos con el botón "atrás" desde el bfcache, limpiamos todo rastro
+    window.addEventListener('pageshow', (event) => {
+        if (!event.persisted) return;
+
+        running = false;
+        tracked.forEach((animation) => {
+            try {
+                animation.cancel();
+            } catch {}
+        });
+        tracked = [];
+
+        document.querySelectorAll('.pc-layer').forEach((el) => el.remove());
+
+        cards.forEach((card) => {
+            card.style.transition = '';
+            card.style.transform = '';
+        });
+
+        Array.from(document.body.children).forEach((child) => {
+            (child as HTMLElement).style.transformOrigin = '';
+        });
+    });
+</script>

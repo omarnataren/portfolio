@@ -1,96 +1,168 @@
 <div id="back-btn-wrapper" class="relative z-50 shrink-0 xl:absolute xl:right-full xl:mr-8 xl:top-5 animate-fade-in-opacity" style="opacity: 0; animation-fill-mode: forwards;">
-    <a id="back-btn" href="/#proyectos" class="text-secondary hover:text-white inline-flex items-center transition-all duration-300 text-sm md:text-base whitespace-nowrap">
+    <a id="back-btn" href="/#proyectos" class="text-secondary hover:text-white inline-flex items-center text-sm md:text-base whitespace-nowrap">
         <i class="fas fa-arrow-left mr-2"></i> Volver al Portafolio
     </a>
 </div>
 
 <script>
+    const ENTER_AT = -40; // Cuánto sube el botón estático antes de empezar a flotar
+
     function initBackButton() {
         const btn = document.getElementById('back-btn');
         const wrapper = document.getElementById('back-btn-wrapper');
 
-        if (!btn || !wrapper) return;
+        if (!btn || !wrapper || btn.dataset.ready === 'true') return;
+        btn.dataset.ready = 'true';
 
+        // A qué altura se ancla el botón flotante. Lo leemos del CSS para que
+        // el valor viva en un solo sitio: el JS escribe `top` inline y tiene
+        // que coincidir con el del estado flotante o el merge se rompe.
+        let pinTop = 36;
+        const readPinTop = () => {
+            const value = parseFloat(getComputedStyle(btn).getPropertyValue('--pin-top'));
+            if (!Number.isNaN(value)) pinTop = value;
+        };
+
+        const isFloating = () => btn.classList.contains('floating-back-btn');
+
+        // Congelamos el hueco que deja el botón al salir del flujo,
+        // así el resto de la cabecera no se mueve ni un píxel.
         const syncWrapperSize = () => {
-            if (!btn.classList.contains('floating-back-btn')) {
-                wrapper.style.width = `${btn.offsetWidth}px`;
-                wrapper.style.height = `${btn.offsetHeight}px`;
-            }
+            if (isFloating()) return;
+            wrapper.style.width = `${btn.offsetWidth}px`;
+            wrapper.style.height = `${btn.offsetHeight}px`;
         };
 
-        const updateButtonPosition = () => {
-            const leftPos = wrapper.getBoundingClientRect().left;
-            if (btn.classList.contains('floating-back-btn')) {
-                btn.style.left = `${leftPos}px`;
-            }
+        // Mientras flota, el botón se coloca donde estaría si no flotara,
+        // salvo que no puede subir más allá de pinTop. Justo en pinTop las
+        // dos posiciones son la misma, así que soltarlo ahí no desplaza nada.
+        const place = (top: number, left: number) => {
+            btn.style.top = `${Math.max(pinTop, top)}px`;
+            btn.style.left = `${left}px`;
         };
 
-        window.addEventListener('resize', () => {
-            if (!btn.classList.contains('floating-back-btn')) syncWrapperSize();
-            updateButtonPosition();
-        });
-        
-        // Initial sync
-        syncWrapperSize();
-        // Force sync after a small delay to ensure layout is stable
-        setTimeout(syncWrapperSize, 100);
+        const update = () => {
+            const { top, left } = wrapper.getBoundingClientRect();
 
-        window.addEventListener('scroll', () => {
-            const rect = wrapper.getBoundingClientRect();
-            const isFloating = btn.classList.contains('floating-back-btn');
+            if (!isFloating()) {
+                if (top < ENTER_AT) {
+                    syncWrapperSize();
+                    btn.classList.add('floating-back-btn');
+                    place(top, left);
+                }
+                return;
+            }
 
-            // Ajustamos el umbral a -50 para que el efecto sea más notorio al bajar
-            if (!isFloating && rect.top < -40) {
-                syncWrapperSize();
-                btn.classList.add('floating-back-btn');
-                updateButtonPosition();
-            } else if (isFloating && rect.top >= 20) {
+            // Merge: aquí la posición fija y la del flujo coinciden exactamente
+            if (top >= pinTop) {
                 btn.classList.remove('floating-back-btn');
+                btn.style.top = '';
                 btn.style.left = '';
+                return;
             }
+
+            place(top, left);
+        };
+
+        let ticking = false;
+        const onScroll = () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                ticking = false;
+                update();
+            });
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', () => {
+            readPinTop();
+            syncWrapperSize();
+            update();
         });
+
+        readPinTop();
+        syncWrapperSize();
+        // La fuente propia carga tarde y cambia el ancho del texto
+        document.fonts.ready.then(syncWrapperSize);
+        update();
     }
 
-    // Run on DOMContentLoaded or immediately if already loaded
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initBackButton);
     } else {
         initBackButton();
     }
 
-    // Support for Astro View Transitions
+    // Soporte para View Transitions de Astro
     document.addEventListener('astro:page-load', initBackButton);
 </script>
 
 <style>
-    /* IMPORTANTE: Usamos 'is:global' o el selector :global() para clases que
-       se añaden dinámicamente con JS, de lo contrario Astro las ignora.
-    */
-    :global(.floating-back-btn) {
-        position: fixed;
-        top: 20px;
-        background-color: white;
-        color: black !important;
-        padding: 10px 20px;
-        border-radius: 9999px;
-        z-index: 100;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        transform: translateX(-20px);
-        animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    /* El botón no cambia de caja entre sus dos estados: la "píldora" blanca
+       la dibuja un pseudo-elemento que sobresale del texto. Así pasar de
+       flotante a estático es sólo un fundido de color, sin desplazamiento.
+       Nada de padding, margin, transform ni font-weight que varíe: cualquiera
+       de esos rompería el merge con un salto lateral. */
+    #back-btn {
+        /* Altura a la que se ancla el botón flotante. El JS lee esta variable,
+           así que basta con tocarla aquí para moverlo. */
+        --pin-top: 36px;
+
+        position: relative;
+        z-index: 0;
         font-weight: 600;
-        text-decoration: none; /* Asegura que no tenga subrayado */
+        transition: color 0.26s ease;
     }
 
-    :global(.floating-back-btn:hover) {
-        transform: translateX(-20px) scale(1.05);
+    #back-btn::before {
+        content: '';
+        position: absolute;
+        inset: -10px -20px;
+        z-index: -1;
+        border-radius: 9999px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.26s ease, background-color 0.2s ease, transform 0.26s ease;
+    }
+
+    /* .floating-back-btn la añade el JS; el elemento ya lleva el scope de
+       Astro, por eso basta con encadenarla al #id. */
+    #back-btn.floating-back-btn {
+        position: fixed;
+        top: var(--pin-top);
+        z-index: 100;
+        color: #000000;
+        animation: back-btn-drop 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    }
+
+    #back-btn.floating-back-btn:hover {
+        color: #000000;
+    }
+
+    #back-btn.floating-back-btn::before {
+        opacity: 1;
+    }
+
+    #back-btn.floating-back-btn:hover::before {
         background-color: #f0f0f0;
+        transform: scale(1.04);
     }
 
-    @keyframes slideDown {
-        from { transform: translateY(-100px) translateX(-20px); opacity: 0; }
-        to { transform: translateY(0) translateX(-20px); opacity: 1; }
+    /* Sólo la entrada tiene movimiento: cae desde arriba de la pantalla */
+    @keyframes back-btn-drop {
+        from { transform: translateY(-100px); opacity: 0; }
+        to   { transform: translateY(0); opacity: 1; }
     }
 
     .animate-fade-in-opacity { animation: fade-in-opacity 1.5s ease-out forwards; }
     @keyframes fade-in-opacity { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+    @media (prefers-reduced-motion: reduce) {
+        #back-btn,
+        #back-btn::before { transition: none; }
+        #back-btn.floating-back-btn { animation: none; }
+    }
 </style>
