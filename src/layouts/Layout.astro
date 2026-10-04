@@ -2,21 +2,29 @@
 import '../styles/global.css';
 import Footer from '@components/Footer.astro';
 import Analytics from '@vercel/analytics/astro'
+import { absoluteUrl, defaultDescription, siteName } from '../utils/seo';
 interface Props {
 	title: string;
     description?: string;
     image?: string;
+    canonicalPath?: string;
+    jsonLd?: Record<string, unknown>;
     withSidebar?: boolean;
     enableExitAnimations?: boolean;
 }
 
 const { 
     title, 
-    description = "Portafolio de Omar Nataren - Software Engineer. Desarrollador Full Stack con enfoque en UI/UX y arquitectura de software.", 
-    image = "/images/og-image.png", // Asegúrate de agregar esta imagen en public/images/
+    description = defaultDescription,
+    image = "/images/og-image.png",
+    canonicalPath = Astro.url.pathname,
+    jsonLd,
     withSidebar = false, 
     enableExitAnimations = false 
 } = Astro.props;
+
+const canonicalUrl = absoluteUrl(canonicalPath);
+const imageUrl = absoluteUrl(image);
 ---
 
 <!doctype html>
@@ -24,32 +32,36 @@ const {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content={siteName} />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="canonical" href={canonicalUrl} />
 		<meta name="generator" content={Astro.generator} />
 		
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={Astro.url} />
+        <meta property="og:site_name" content={siteName} />
+        <meta property="og:locale" content="es_MX" />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-        <meta property="og:image" content={new URL(image, Astro.url)} />
+        <meta property="og:image" content={imageUrl} />
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={Astro.url} />
+        <meta property="twitter:url" content={canonicalUrl} />
         <meta property="twitter:title" content={title} />
         <meta property="twitter:description" content={description} />
-        <meta property="twitter:image" content={new URL(image, Astro.url)} />
-
-        <!-- Cache Control para evitar problemas de carga en desarrollo -->
-        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-        <meta http-equiv="Pragma" content="no-cache" />
-        <meta http-equiv="Expires" content="0" />
+        <meta property="twitter:image" content={imageUrl} />
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 		<title>{title}</title>
+
+        {jsonLd && (
+            <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+        )}
 
         <!-- Continuación de la animación de entrada desde una ProjectCard.
              Va inline y en el <head> para que se aplique antes del primer pintado. -->

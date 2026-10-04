@@ -6,9 +6,38 @@ import Particles from '@components/Particles.astro';
 import SideNavbar from '@components/SideNavbar.astro';
 import Stack from '@components/Stack.astro';
 import MyProjects from '@components/MyProjects.astro';
+import { absoluteUrl, defaultDescription, siteName } from '../utils/seo';
+
+const homeJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: siteName,
+    url: absoluteUrl("/"),
+    jobTitle: "Software Engineer",
+    sameAs: [
+        "https://github.com/omarnataren",
+        "https://www.linkedin.com/in/omar-nataren-arredondo-189531370/"
+    ],
+    knowsAbout: [
+        "Full Stack Development",
+        "UI/UX",
+        "Software Architecture",
+        "Astro",
+        "Angular",
+        "NestJS",
+        "Flutter"
+    ],
+};
 ---
 
-<Layout title="Omar Nataren | Software Engineer" withSidebar={true} enableExitAnimations={true}>
+<Layout
+    title="Omar Nataren | Software Engineer Full Stack"
+    description={defaultDescription}
+    canonicalPath="/"
+    jsonLd={homeJsonLd}
+    withSidebar={true}
+    enableExitAnimations={true}
+>
     
     <SideNavbar />
 

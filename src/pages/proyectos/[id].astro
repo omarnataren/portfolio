@@ -5,6 +5,7 @@ import MetaInfo from '@components/MetaInfo.astro';
 import PhotoCarrousel from '@components/PhotoCarrousel.astro';
 import BackButton from '@components/BackButton.astro';
 import { projects } from '../../data/projects';
+import { absoluteUrl, stripHtml } from '../../utils/seo';
 
 export async function getStaticPaths() {
     return projects.map((project) => ({
@@ -14,9 +15,33 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
+const projectDescription = `${project.subtitle} Caso de estudio de Omar Nataren como ${project.role}, usando ${project.tags.join(", ")}.`;
+const projectPath = `/proyectos/${project.id}/`;
+const projectImage = project.images[0] ?? "/images/og-image.png";
+const projectJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    headline: project.subtitle,
+    description: stripHtml(projectDescription),
+    url: absoluteUrl(projectPath),
+    image: absoluteUrl(projectImage),
+    author: {
+        "@type": "Person",
+        name: "Omar Nataren",
+        url: absoluteUrl("/"),
+    },
+    keywords: project.tags.join(", "),
+};
 ---
 
-<Layout title={`${project.title} | Omar Nataren`}>
+<Layout
+    title={`${project.title} | Proyecto de Omar Nataren`}
+    description={projectDescription}
+    image={projectImage}
+    canonicalPath={projectPath}
+    jsonLd={projectJsonLd}
+>
 
     <main class="max-w-5xl mx-auto px-6 pt-10 pb-8">
         
